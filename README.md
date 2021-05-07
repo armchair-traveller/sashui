@@ -1,38 +1,14 @@
-# create-svelte
+# shui-demo
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte);
+**S**velte **H**eadless **UI Demo**
 
-## Creating a project
+⚠ Experimental. Nothing works as of yet.
 
-If you're seeing this, you've probably already done this step. Congrats!
+This is just a little Svelte project attempting to adapt Headless-UI's (React) functionality to Svelte. Its end goal is just to have the functionality and accessibility of Headless-UI as a few components with predefined unstyled elements. It won't provide the same wrapper/abstraction API that Headless gives as the Tailwind Labs team will be spearheading that effort when they make their way to Svelte.
 
-```bash
-# create a new project in the current directory
-npm init svelte@next
+Current status: Just creating the base level components: elements, event handlers, and props. No higher-level abstractions like what Headless offers until the base works.
 
-# create a new project in my-app
-npm init svelte@next my-app
-```
+## Relevant Links
 
-> Note: the `@next` is temporary
-
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-Before creating a production version of your app, install an [adapter](https://kit.svelte.dev/docs#adapters) for your target environment. Then:
-
-```bash
-npm run build
-```
-
-> You can preview the built app with `npm run preview`, regardless of whether you installed an adapter. This should _not_ be used to serve your app in production.
+[`svelte:element`](https://github.com/sveltejs/svelte/pull/5481) - could provide `as`-like props.  
+[Spread events](https://github.com/sveltejs/svelte/issues/5112) - mentions headless/react-aria. The API for a headless implementation would be much cleaner with spreadable events. Actions have issues due to no SSR.
