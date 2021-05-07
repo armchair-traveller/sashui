@@ -1,0 +1,15 @@
+{
+  "name": "~TODO~",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "svelte-kit dev",
+    "build": "svelte-kit build",
+    "preview": "svelte-kit preview"
+  },
+  "devDependencies": {
+    "@sveltejs/kit": "next",
+    "svelte": "^3.34.0",
+    "vite": "^2.2.3"
+  },
+  "type": "module"
+}
