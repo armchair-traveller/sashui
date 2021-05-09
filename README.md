@@ -4,7 +4,7 @@
 
 ⚠ Experimental. Nothing works as of yet.
 
-This is just a little Svelte project attempting to adapt Headless-UI's (React) functionality to Svelte. Its end goal is just to have the functionality and accessibility of Headless-UI as a few components with predefined unstyled elements. In the demo form, it'll mostly serve as examples of accessible components for reference, rather than as a library. It won't provide the same wrapper/abstraction API that Headless gives as the Tailwind Labs team will be spearheading that effort when they make their way to Svelte.
+This is just a little Svelte project attempting to adapt Headless-UI's (React) functionality to Svelte. Its end goal is just to have the functionality and accessibility of Headless-UI as a few components with predefined unstyled elements. In the demo form, it'll mostly serve as examples of accessible components for reference, rather than as a library. It won't provide the same wrapper/abstraction API that Headless gives as the Tailwind Labs team will be spearheading that effort when they make their way to Svelte. (Honestly, this is just a thinly veiled disclaimer to say I can't figure out a clean API for Svelte that replicates the flexibility of Headless without killing SSR... so I'm at least building its expected result first and seeing if I where I can take it from there.)
 
 Current status: Just creating the base level components: elements, event handlers, and props. No higher-level abstractions like what Headless offers until the base works.
 
