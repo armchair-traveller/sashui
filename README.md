@@ -26,3 +26,7 @@ Current status: Just creating the base level components: elements, event handler
 **Alt**
 
 [Multiple components per file](https://github.com/sveltejs/svelte/issues/2940) - non-issue. It would offer a cleaner API to be able to reference components like `<Menu.Item>` & `<Menu.Items>`, but a similar API could be achieved by using slot props, the only issue being slightly more typing.
+
+https://mobile.twitter.com/leander__g/status/1363100744350597123
+
+https://mobile.twitter.com/opensas/status/1346236765380759552
