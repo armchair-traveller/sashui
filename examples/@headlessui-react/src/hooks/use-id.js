@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { useIsoMorphicEffect } from './use-iso-morphic-effect'
+import { onMount } from 'svelte'
+import { get } from 'svelte/store'
 import { useServerHandoffComplete } from './use-server-handoff-complete'
 
 // We used a "simple" approach first which worked for SSR and rehydration on the client. However we
@@ -14,12 +14,12 @@ function generateId() {
 }
 
 export function useId() {
-  let ready = useServerHandoffComplete()
-  let [id, setId] = useState(ready ? generateId : null)
+  let ready = get(useServerHandoffComplete())
+  let id = ready ? generateId() : null
 
-  useIsoMorphicEffect(() => {
-    if (id === null) setId(generateId())
-  }, [id])
+  onMount(() => {
+    if (id === null) id = generateId()
+  })
 
   return id != null ? '' + id : undefined
 }
