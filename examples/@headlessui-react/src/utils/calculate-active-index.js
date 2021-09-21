@@ -1,3 +1,19 @@
+export var Focus
+;(function (Focus) {
+  /** Focus the first non-disabled item. */
+  Focus[(Focus['First'] = 0)] = 'First'
+  /** Focus the previous non-disabled item. */
+  Focus[(Focus['Previous'] = 1)] = 'Previous'
+  /** Focus the next non-disabled item. */
+  Focus[(Focus['Next'] = 2)] = 'Next'
+  /** Focus the last non-disabled item. */
+  Focus[(Focus['Last'] = 3)] = 'Last'
+  /** Focus a specific item based on the `id` of the item. */
+  Focus[(Focus['Specific'] = 4)] = 'Specific'
+  /** Focus no items at all. */
+  Focus[(Focus['Nothing'] = 5)] = 'Nothing'
+})(Focus || (Focus = {}))
+
 function assertNever(x) {
   throw new Error('Unexpected object: ' + x)
 }
