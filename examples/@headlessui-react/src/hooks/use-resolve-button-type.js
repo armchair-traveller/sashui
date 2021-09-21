@@ -6,7 +6,7 @@
  * current proposed implementation, except for the simplest use case.
  *
  * This isn't a dealbreaker. The feature has a myriad of alternatives, some better than `as`.
- * For example, an action-based API would be very suitable.
+ * For example, an slot+/action-based API would be very suitable.
  *
  * Relevant: https://twitter.com/peduarte/status/1426181279293362176 thread has alternatives you can consider.
  * */
