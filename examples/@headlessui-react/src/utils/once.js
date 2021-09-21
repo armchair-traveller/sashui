@@ -1,7 +1,6 @@
-export function once<T>(cb: (...args: T[]) => void) {
+export function once(cb) {
   let state = { called: false }
-
-  return (...args: T[]) => {
+  return (...args) => {
     if (state.called) return
     state.called = true
     return cb(...args)
