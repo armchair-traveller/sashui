@@ -24,6 +24,47 @@ let focusableSelector = [
   )
   .join(',')
 
+export var Focus
+;(function (Focus) {
+  /** Focus the first non-disabled element */
+  Focus[(Focus['First'] = 1)] = 'First'
+  /** Focus the previous non-disabled element */
+  Focus[(Focus['Previous'] = 2)] = 'Previous'
+  /** Focus the next non-disabled element */
+  Focus[(Focus['Next'] = 4)] = 'Next'
+  /** Focus the last non-disabled element */
+  Focus[(Focus['Last'] = 8)] = 'Last'
+  /** Wrap tab around */
+  Focus[(Focus['WrapAround'] = 16)] = 'WrapAround'
+  /** Prevent scrolling the focusable elements into view */
+  Focus[(Focus['NoScroll'] = 32)] = 'NoScroll'
+})(Focus || (Focus = {}))
+
+export var FocusResult
+;(function (FocusResult) {
+  /** Something went wrong while trying to focus. */
+  FocusResult[(FocusResult['Error'] = 0)] = 'Error'
+  /** When `Focus.WrapAround` is enabled, going from position `N` to `N+1` where `N` is the last index in the array, then we overflow. */
+  FocusResult[(FocusResult['Overflow'] = 1)] = 'Overflow'
+  /** Focus was successful. */
+  FocusResult[(FocusResult['Success'] = 2)] = 'Success'
+  /** When `Focus.WrapAround` is enabled, going from position `N` to `N-1` where `N` is the first index in the array, then we underflow. */
+  FocusResult[(FocusResult['Underflow'] = 3)] = 'Underflow'
+})(FocusResult || (FocusResult = {}))
+var Direction
+;(function (Direction) {
+  Direction[(Direction['Previous'] = -1)] = 'Previous'
+  Direction[(Direction['Next'] = 1)] = 'Next'
+})(Direction || (Direction = {}))
+
+export var FocusableMode
+;(function (FocusableMode) {
+  /** The element itself must be focusable. */
+  FocusableMode[(FocusableMode['Strict'] = 0)] = 'Strict'
+  /** The element should be inside of a focusable element. */
+  FocusableMode[(FocusableMode['Loose'] = 1)] = 'Loose'
+})(FocusableMode || (FocusableMode = {}))
+
 export function getFocusableElements(container = document.body) {
   if (container == null) return []
   return Array.from(container.querySelectorAll(focusableSelector))

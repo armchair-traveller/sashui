@@ -7,6 +7,30 @@ import {
 } from 'react'
 import { match } from './match'
 
+export var Features
+;(function (Features) {
+  /** No features at all */
+  Features[(Features['None'] = 0)] = 'None'
+  /**
+   * When used, this will allow us to use one of the render strategies.
+   *
+   * **The render strategies are:**
+   *    - **Unmount**   _(Will unmount the component.)_
+   *    - **Hidden**    _(Will hide the component using the [hidden] attribute.)_
+   */
+  Features[(Features['RenderStrategy'] = 1)] = 'RenderStrategy'
+  /**
+   * When used, this will allow the user of our component to be in control. This can be used when
+   * you want to transition based on some state.
+   */
+  Features[(Features['Static'] = 2)] = 'Static'
+})(Features || (Features = {}))
+export var RenderStrategy
+;(function (RenderStrategy) {
+  RenderStrategy[(RenderStrategy['Unmount'] = 0)] = 'Unmount'
+  RenderStrategy[(RenderStrategy['Hidden'] = 1)] = 'Hidden'
+})(RenderStrategy || (RenderStrategy = {}))
+
 export function render({
   props,
   slot,
