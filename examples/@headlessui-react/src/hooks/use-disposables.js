@@ -1,4 +1,5 @@
 import { onMount } from 'svelte'
+import { writable } from 'svelte/store'
 
 import { disposables } from '../utils/disposables'
 
@@ -10,7 +11,7 @@ export function useDisposables() {
    * TODO: Anytime you see use- in the file name, it is likely making wasteful use of useState. Keep this in mind if
    * there's unintended behavior you can check these files later in the backup.
    */
-  const d = disposables()
-  onMount(() => d.dispose)
+  const d = writable(disposables())
+  onMount(() => get(d).dispose)
   return d
 }
