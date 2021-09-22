@@ -7,7 +7,7 @@ export function useLabels() {
   // * should be fine to use Svelte's context
   let sLabelIds = writable([])
   return [
-    // Store; The actual id's as string or undefined.
+    // Store: The actual id's as string or undefined.
     derived(sLabelIds, (labelIds) =>
       labelIds.length > 0 ? labelIds.join(' ') : undefined
     ),
