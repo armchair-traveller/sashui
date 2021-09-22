@@ -226,32 +226,29 @@ let Button = forwardRefWithAs(function Button(props, ref) {
   let buttonRef = useSyncRefs(state.buttonRef, ref)
   let id = `headlessui-listbox-button-${useId()}`
   let d = useDisposables()
-  let handleKeyDown = useCallback(
-    (event) => {
-      switch (event.key) {
-        // Ref: https://www.w3.org/TR/wai-aria-practices-1.2/#keyboard-interaction-13
-        case Keys.Space:
-        case Keys.Enter:
-        case Keys.ArrowDown:
-          event.preventDefault()
-          dispatch({ type: ActionTypes.OpenListbox })
-          d.nextFrame(() => {
-            if (!state.propsRef.current.value)
-              dispatch({ type: ActionTypes.GoToOption, focus: Focus.First })
-          })
-          break
-        case Keys.ArrowUp:
-          event.preventDefault()
-          dispatch({ type: ActionTypes.OpenListbox })
-          d.nextFrame(() => {
-            if (!state.propsRef.current.value)
-              dispatch({ type: ActionTypes.GoToOption, focus: Focus.Last })
-          })
-          break
-      }
-    },
-    [dispatch, state, d]
-  )
+  let handleKeyDown = (event) => {
+    switch (event.key) {
+      // Ref: https://www.w3.org/TR/wai-aria-practices-1.2/#keyboard-interaction-13
+      case Keys.Space:
+      case Keys.Enter:
+      case Keys.ArrowDown:
+        event.preventDefault()
+        dispatch({ type: ActionTypes.OpenListbox })
+        d.nextFrame(() => {
+          if (!state.propsRef.current.value)
+            dispatch({ type: ActionTypes.GoToOption, focus: Focus.First })
+        })
+        break
+      case Keys.ArrowUp:
+        event.preventDefault()
+        dispatch({ type: ActionTypes.OpenListbox })
+        d.nextFrame(() => {
+          if (!state.propsRef.current.value)
+            dispatch({ type: ActionTypes.GoToOption, focus: Focus.Last })
+        })
+        break
+    }
+  }
   let handleKeyUp = useCallback((event) => {
     switch (event.key) {
       case Keys.Space:
