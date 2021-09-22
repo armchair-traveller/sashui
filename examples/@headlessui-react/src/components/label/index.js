@@ -1,5 +1,5 @@
 import { setContext } from 'svelte'
-import { derived } from 'svelte/store'
+import { derived, writable } from 'svelte/store'
 export function useLabels() {
   // * because svelte context doesn't specifically wrap, it just uses a key, we don't have a wrapper component
   // * just use this in whatever component you want as label provider
