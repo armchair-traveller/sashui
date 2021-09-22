@@ -1,4 +1,5 @@
 import { onMount } from 'svelte'
+import { writable } from 'svelte/store'
 
 /**
  * * it's likely whatever is calling this can be replaced with afterUpdate, as that only happens after initial render
@@ -6,10 +7,10 @@ import { onMount } from 'svelte'
  * if you ever need reactive onMount or lifecycle funcs, use reactive blocks/declaration ($:)
  */
 export function useIsInitialRender() {
-  let initial = true
+  const initial = writable(true)
 
   onMount(() => {
-    initial = false
+    initial.set(false)
   })
 
   return initial
