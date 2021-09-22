@@ -1,5 +1,5 @@
 import { onMount } from 'svelte'
-import { get, writable } from 'svelte/store'
+import { derived, get, writable } from 'svelte/store'
 import { useServerHandoffComplete } from './use-server-handoff-complete'
 
 // We used a "simple" approach first which worked for SSR and rehydration on the client. However we
@@ -16,12 +16,9 @@ function generateId() {
 export function useId() {
   let ready = get(useServerHandoffComplete())
   const sId = writable(ready ? generateId() : null)
-  let idNum
-  const unsub = sId.subscribe((id) => (idNum = id))
   onMount(() => {
-    if (idNum === null) sId.set(generateId())
-    return unsub
+    if (get(sId) === null) sId.set(generateId())
   })
 
-  return idNum != null ? '' + idNum : undefined
+  return derived(sId, (id) => (id != null ? '' + id : undefined))
 }
