@@ -1,15 +1,16 @@
 import { setContext } from 'svelte'
+import { derived } from 'svelte/store'
 export function useLabels() {
   // * because svelte context doesn't specifically wrap, it just uses a key, we don't have a wrapper component
   // * just use this in whatever component you want as label provider
   // * from my perspective, each label only has one provider, and won't really conflict with each other, so it
   // * should be fine to use Svelte's context
   let sLabelIds = writable([])
-  let labelIds = get(sLabelIds)
   return [
-    // The actual id's as string or undefined.
-    // ? Is this supposed to be reactive? Use derived store if so.
-    labelIds.length > 0 ? labelIds.join(' ') : undefined,
+    // Store; The actual id's as string or undefined.
+    derived(sLabelIds, (labelIds) =>
+      labelIds.length > 0 ? labelIds.join(' ') : undefined
+    ),
     // The provider component
     function setLabelContext() {
       let register = (value) => {
