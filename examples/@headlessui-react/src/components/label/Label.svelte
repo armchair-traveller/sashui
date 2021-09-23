@@ -3,7 +3,7 @@ import { getContext, onMount } from 'svelte'
 import { useId } from '../../hooks/use-id'
 
 let register = useLabelContext()
-let id = `headlessui-label-${useId()}`
+$: id = `headlessui-label-${$useId}`
 onMount(() => register(id))
 
 function useLabelContext() {
