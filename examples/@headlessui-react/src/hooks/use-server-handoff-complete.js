@@ -2,11 +2,12 @@ import { onMount } from 'svelte'
 import { get, writable } from 'svelte/store'
 
 const serverHandoffComplete = writable(false)
-
-export function useServerHandoffComplete() {
-  onMount(() => {
-    if (get(serverHandoffComplete)) return
-    serverHandoffComplete.set(true)
-  })
-  return serverHandoffComplete
+export const useServerHandoffComplete = {
+  subscribe(subCb) {
+    onMount(() => {
+      if (get(serverHandoffComplete)) return
+      serverHandoffComplete.set(true)
+    })
+    return serverHandoffComplete.subscribe(subCb)
+  },
 }
