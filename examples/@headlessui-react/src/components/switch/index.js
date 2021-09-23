@@ -10,7 +10,6 @@ import React, {
 import { render } from '../../utils/render'
 import { useId } from '../../hooks/use-id'
 import { Keys } from '../keyboard'
-import { isDisabledReactIssue7711 } from '../../utils/bugs'
 import { Label, useLabels } from '../label/label'
 import { Description, useDescriptions } from '../description/description'
 import { useResolveButtonType } from '../../hooks/use-resolve-button-type'
@@ -69,8 +68,9 @@ export function Switch(props) {
   let toggle = useCallback(() => onChange(!checked), [onChange, checked])
   let handleClick = useCallback(
     (event) => {
-      if (isDisabledReactIssue7711(event.currentTarget))
-        return event.preventDefault()
+      // ? This bug probably doesn't exist in Svelte... right?
+      // if (isDisabledReactIssue7711(event.currentTarget))
+      //   return event.preventDefault()
       event.preventDefault()
       toggle()
     },
