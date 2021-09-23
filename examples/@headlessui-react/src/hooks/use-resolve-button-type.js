@@ -1,5 +1,5 @@
 /**
- * This seems to be used w/ `as` functionality, which doesn't exist in Svelte
+ * * This seems to be used w/ `as` functionality, which doesn't exist in Svelte
  *
  * `svelte:element` dynamic elements is a relevant issue https://github.com/sveltejs/svelte/issues/2324 but it seems like
  * it'll take a very long time before anyone actually implements it as it's quite niche and has many issues w/ its
