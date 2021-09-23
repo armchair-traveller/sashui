@@ -4,13 +4,12 @@ import { writable } from 'svelte/store'
 import { useDescriptions } from '../description'
 import { useLabels, Label } from '../label'
 
-useDescriptions
-let sSwitchEl = writable(null)
+let switchEl = writable(null)
 const [labelledby, LabelContext] = useLabels()
 const [describedby, DescriptionContext] = useDescriptions()
 
 const context = {
-  sSwitchEl,
+  switchEl,
   labelledby,
   describedby,
 }
@@ -19,9 +18,9 @@ setContext('group', context)
 
 <Label
   on:click={() => {
-    if (!$sSwitchEl) return
-    $sSwitchEl.click()
-    $sSwitchEl.focus({ preventScroll: true })
+    if (!$switchEl) return
+    $switchEl.click()
+    $switchEl.focus({ preventScroll: true })
   }}
 >
   <slot />
