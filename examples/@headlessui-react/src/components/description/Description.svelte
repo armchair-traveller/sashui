@@ -21,6 +21,6 @@ function useDescriptionContext() {
 </script>
 
 <!-- * Even though we're forwarding props, we're not forwarding any events. Add as needed -->
-<p {...$$restProps} {id}>
+<p {...$$restProps} {id} on:click>
   <slot />
 </p>

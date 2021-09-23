@@ -20,6 +20,6 @@ function useLabelContext() {
 </script>
 
 <!-- * Even though we're forwarding props, we're not forwarding any events. Add as needed -->
-<label {...$$restProps} {id}>
+<label {...$$restProps} {id} on:click>
   <slot />
 </label>
