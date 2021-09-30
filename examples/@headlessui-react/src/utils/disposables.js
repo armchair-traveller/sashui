@@ -1,3 +1,6 @@
+/**
+ * This is irrelevant in Svelte because we use `tick` which uses RAF.
+ */
 export function disposables() {
   let disposables = []
   let api = {

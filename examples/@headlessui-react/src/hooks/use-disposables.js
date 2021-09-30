@@ -8,8 +8,8 @@ export function useDisposables() {
   // ? this was using useState before
   // ? my only concern is that it's just functions on RAF so I don't think it should need reactivity...
   /** this is actually something common in this repo, needless use of useState.
-   * TODO: Anytime you see use- in the file name, it is likely making wasteful use of useState. Keep this in mind if
-   * there's unintended behavior you can check these files later in the backup.
+   * TODO: Anytime you see use- in the file name, it is possibly making wasteful use of useState (e.g. not requiring reactivity).
+   * Keep this in mind and if there's unintended behavior you can check these files later in the backup.
    */
   const d = writable(disposables())
   onMount(() => () => get(d).dispose())
