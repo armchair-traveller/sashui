@@ -134,4 +134,4 @@ https://mobile.twitter.com/leander__g/status/1363100744350597123
 
 https://mobile.twitter.com/opensas/status/1346236765380759552
 
-Publish notes: Sp far, only entrypoint is from `./index.js`. Only dependency should be `svelte` as a `peerDependency`.
+Publish notes: Sp far, only entrypoint is from `./index.js`. Only dependency should be `svelte` as a `peerDependency`... Or you know, just copy paste your previous `package.json`. No shame, that's better and faster.
