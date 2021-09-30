@@ -1,5 +1,7 @@
 # Sash UI
 
+![package version](https://img.shields.io/npm/v/sashui?color=%23ff3e00&label=version&style=for-the-badge)
+
 Short for **S**velte **A**ction **S**tores & **H**eadless **UI**.
 
 **Installation**: simply run `npm i -D sashui`
