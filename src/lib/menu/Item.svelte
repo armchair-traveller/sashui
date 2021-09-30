@@ -15,13 +15,11 @@ function setup() {
   const menuEl = el.closest('[role=menu]')
   if (!menuEl) throw new Error('Missing parent menu element.')
 
-  const unsub = menuEl?.selected.subscribe(
-    (selectedEl) => (active = selectedEl == el)
-  )
+  const unsub = menuEl?.selected.subscribe((selectedEl) => (active = selectedEl == el))
 
   el.setAttribute('role', 'menuitem')
   el.setAttribute('tabindex', -1)
-  el.id = `shui-menuitem-${id}`
+  el.id = `sashui-menuitem-${id}`
 
   function handleMove() {
     if (!active) menuEl.items.reset(el)

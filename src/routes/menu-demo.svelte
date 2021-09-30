@@ -1,7 +1,7 @@
 <script>
-  let Menu,
-    items = [],
-    open
+let Menu,
+  items = [],
+  open
 </script>
 
 <!-- Alternative API
@@ -21,7 +21,7 @@ This current API already offers total control over all elements, by explicitly e
   * btn: action to setup button props/handlers
   * isActive: check id if currently active, returns boolean
 -->
-<Menu let:shui={{ item, isActive, btn }} bind:open>
+<Menu let:sashui={{ item, isActive, btn }} bind:open>
   <button use:btn />
   <!-- JS allows the isActive id default assignment to accept anything used on the same line, which in this case
   can be i, href, name. The con of this destructuring trick is sharing the namespace of the array's objs. However since
@@ -29,8 +29,6 @@ This current API already offers total control over all elements, by explicitly e
   on the children itself.
   Note: destructuring slot props only allow objs, no arrs. -->
   {#each items as { href, name, active = isActive(i) }, i}
-    <a class="text-blue-200 {active && 'bg-blue-500'}" use:item={i} {href}
-      >{name}</a
-    >
+    <a class="text-blue-200 {active && 'bg-blue-500'}" use:item={i} {href}>{name}</a>
   {/each}
 </Menu>

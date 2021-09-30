@@ -12,7 +12,7 @@
 Usage:
 ```svelte
 <script>
-import { useMenu } from '../shui/menu/useMenu'
+import { useMenu } from 'sashui'
 const Menu = useMenu()
 </script>
 
