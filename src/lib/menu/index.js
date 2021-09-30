@@ -20,7 +20,7 @@ import Item from './Item.svelte'
 Usage:
 ```svelte
 <script>
-import { useMenu } from '$lib/shui/menu/useMenu'
+import { useMenu } from 'sashui'
 const Menu = useMenu()
 </script>
 
@@ -60,7 +60,7 @@ export function useMenu() {
   Menu.button = (el) => {
     buttonEl = el
     buttonEl.ariaHasPopup = true
-    buttonEl.id = `shui-menubutton-${generateId()}`
+    buttonEl.id = `sashui-menubutton-${generateId()}`
     const MenuUnsub = Menu.subscribe((isOpen) => (buttonEl.ariaExpanded = isOpen))
     const cleanup = addEvts(buttonEl, {
       click(e) {
@@ -138,7 +138,7 @@ export function useMenu() {
 
     const itemsWalker = elWalker(menuEl, (el) => el.getAttribute('role') == 'menuitem' && !el.disabled)
 
-    menuEl.id = `shui-menu-${generateId()}`
+    menuEl.id = `sashui-menu-${generateId()}`
     buttonEl?.setAttribute('aria-controls', menuEl.id)
     menuEl.setAttribute('role', 'menu')
     menuEl.setAttribute('tabindex', 0)
@@ -213,6 +213,11 @@ export function useMenu() {
             }
             break
         }
+      },
+      keyup(e) {
+        // Required for firefox, event.preventDefault() in handleKeyDown for the Space key doesn't cancel the handleKeyUp,
+        // which in turn triggers a *click*.
+        e.key == ' ' && e.preventDefault()
       },
     })
     return {
