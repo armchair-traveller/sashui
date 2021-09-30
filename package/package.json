@@ -1,0 +1,20 @@
+{
+  "name": "@fang/shui",
+  "version": "0.0.1",
+  "peerDependencies": {
+    "svelte": "^3.34.0"
+  },
+  "type": "module",
+  "exports": {
+    "./package.json": null,
+    "./SlotEl.svelte": null,
+    ".": "./index.js",
+    "./menu/Item.svelte": null,
+    "./menu": null,
+    "./toggle": null,
+    "./utils/action": null,
+    "./utils/elWalker": null,
+    "./utils/generateId": null
+  },
+  "svelte": "./index.js"
+}
