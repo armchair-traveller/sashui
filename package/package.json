@@ -1,21 +1,11 @@
 {
-  "name": "@fang/shui",
+  "name": "shlui",
   "version": "0.0.1",
-  "devDependencies": {
-    "@sveltejs/kit": "next",
-    "autoprefixer": "^10.3.1",
-    "cssnano": "^5.0.6",
-    "postcss": "^8.3.5",
-    "postcss-load-config": "^3.1.0",
-    "svelte": "^3.34.0",
-    "svelte-preprocess": "^4.7.4",
-    "svelte2tsx": "^0.4.7",
-    "tailwindcss": "^2.2.4",
-    "typescript": "^4.4.3"
+  "peerDependencies": {
+    "svelte": "^3.43.1"
   },
   "type": "module",
   "exports": {
-    "./package.json": "./package.json",
     ".": "./index.js"
   },
   "svelte": "./index.js"
