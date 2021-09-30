@@ -1,20 +1,29 @@
 {
   "name": "@fang/shui",
   "version": "0.0.1",
-  "peerDependencies": {
-    "svelte": "^3.34.0"
+  "devDependencies": {
+    "@sveltejs/kit": "next",
+    "autoprefixer": "^10.3.1",
+    "cssnano": "^5.0.6",
+    "postcss": "^8.3.5",
+    "postcss-load-config": "^3.1.0",
+    "svelte": "^3.34.0",
+    "svelte-preprocess": "^4.7.4",
+    "svelte2tsx": "^0.4.7",
+    "tailwindcss": "^2.2.4",
+    "typescript": "^4.4.3"
   },
   "type": "module",
   "exports": {
-    "./package.json": null,
-    "./SlotEl.svelte": null,
+    "./package.json": "./package.json",
+    "./SlotEl.svelte": "./SlotEl.svelte",
     ".": "./index.js",
-    "./menu/Item.svelte": null,
-    "./menu": null,
-    "./toggle": null,
-    "./utils/action": null,
-    "./utils/elWalker": null,
-    "./utils/generateId": null
+    "./menu/Item.svelte": "./menu/Item.svelte",
+    "./menu": "./menu/index.js",
+    "./toggle": "./toggle.js",
+    "./utils/action": "./utils/action.js",
+    "./utils/elWalker": "./utils/elWalker.js",
+    "./utils/generateId": "./utils/generateId.js"
   },
   "svelte": "./index.js"
 }
