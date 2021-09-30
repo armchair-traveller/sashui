@@ -30,7 +30,7 @@ Some additional comments... I find it pretty interesting the amount of vanilla D
 
 ## Docs
 
-Not too fleshed out at the moment, feel free to ask questions so that usecases can be added to the docs. Most actions/components have JSdoc examples and notes for usage. This section will only cover basic code snippets, which should be sufficient to piece together if you have basic knowledge of elements and have seen the Headless-UI React docs/snippets.
+Not too fleshed out at the moment, feel free to ask questions so that usecases can be added to the docs. Most actions/components have JSdoc examples and notes for usage. This section will only cover basic code snippets, which should be sufficient to piece together if you have basic knowledge of elements and have seen the Headless-UI React docs/snippets. Please use GitHub's table of contents navigation feature for an overview and to quickly zip to parts you need.
 
 ### Menu
 
