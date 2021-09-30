@@ -1,6 +1,6 @@
 # shui (**S**velte **H**eadless **UI**)
 
-## Status:
+## Status
 
 ✔ Menu  
 ✔ Toggle  
