@@ -16,14 +16,7 @@
   "type": "module",
   "exports": {
     "./package.json": "./package.json",
-    "./SlotEl.svelte": "./SlotEl.svelte",
-    ".": "./index.js",
-    "./menu/Item.svelte": "./menu/Item.svelte",
-    "./menu": "./menu/index.js",
-    "./toggle": "./toggle.js",
-    "./utils/action": "./utils/action.js",
-    "./utils/elWalker": "./utils/elWalker.js",
-    "./utils/generateId": "./utils/generateId.js"
+    ".": "./index.js"
   },
   "svelte": "./index.js"
 }
