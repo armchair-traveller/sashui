@@ -8,3 +8,5 @@ It seems from my brief observation that:
 - Request animation frame
 
 ... wow these notes were useless. Attempting an initial adaption was far more fruitful. The final implementation looks completely different from initial.
+
+Simply understanding truly what was happening was what was necessary. There were many misunderstandings that once converted became simple vanilla JS (DOM) manipulations.
