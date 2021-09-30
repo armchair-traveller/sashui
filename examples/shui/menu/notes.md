@@ -6,3 +6,5 @@ It seems from my brief observation that:
 - Aria props
 - Event handlers
 - Request animation frame
+
+... wow these notes were useless. Attempting an initial adaption was far more fruitful. The final implementation looks completely different from initial.
