@@ -24,6 +24,8 @@ There was goal of a demo form, mostly serving as examples of accessible componen
 
 On the topic of SSR: The optimal solution is SSR attributes for actions, as detailed in _Relevant Links_. Another possible solution is to provide to consumer attributes to spread or tell the consumer the aria attributes required. It's not a big issue since ALL of the components require JavaScript and will simply not work without. So the main element that triggers the interactivity will be the only one that needs SSR attributes, possibly only introducing an inconvenience of spreading once per component.
 
+Some additional comments... I find it pretty interesting the amount of vanilla DOM needed from a maintainer's perspective. I've even employed a hack in `SlotEl.svelte` to create a utility that gets the element reference to a slotted element without cluttering the DOM... by adding and removing an invisible `div`. That was pretty funny.
+
 </details>
 
 ## Docs
@@ -49,7 +51,7 @@ const Menu = useMenu()
 {/if}
 ```
 
-`Menu` makes use of Svelte's auto-subscription syntax. Defaults to `false`. You can also use it to open and close the menu programatically (e.g. `$Menu = false`), though closing events are already automatically managed by the menu.
+`$Menu` makes use of Svelte's auto-subscription syntax. Defaults to `false`. You can also use it to open and close the menu programatically (e.g. `$Menu = false`), though closing events are already automatically managed by the menu.
 
 If you bind to the menu element, it also has attached to it some of the internal helpers:
 
@@ -57,7 +59,7 @@ If you bind to the menu element, it also has attached to it some of the internal
 - `menuEl.items`: An object containing menu helpers `{ reset, gotoItem, closeMenu }`
   - `reset(el)` resets the selected el, or if an el is passed in changes currently selected to it.
   - `gotoItem(idx)` sets current selected item to the item index passed in, accepts negative indexing. By default uses first item. Only responsible for valid indexes.
-  - `closeMenu()` closes the menu AND focuses the menu button, which is the default behavior of most events causing the menu to close.
+  - `closeMenu()` closes the menu and focuses the menu button afterwards, which is the default behavior of most events causing the menu to close.
 
 ### Toggle
 
