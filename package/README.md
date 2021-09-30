@@ -1,4 +1,4 @@
-# shui (**S**velte **H**eadless **UI**)
+# shlui (Svelte Headless UI)
 
 ## Status
 
