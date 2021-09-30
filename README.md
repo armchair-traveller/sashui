@@ -1,10 +1,25 @@
-# Ash UI
+# Sash UI
 
-Short for Action Svelte Headless UI.
+Short for **S**velte **A**ction **S**tores & **H**eadless **UI**.
+
+**Installation**: simply run `npm i -D sashui`
+
+## Status
+
+✔ Menu  
+✔ Toggle  
+🚧 Listbox (Working on it right now!)
+
+### 🛣 Roadmap
+
+- Dialog (Modal)
+- Popover (seems like a simple `<nav>` link menu?)
+- Radio Group (low priority in favor of `<input type="radio">`s)
+- Disclosure (low priority in favor of `<summary>`)
 
 ## Why?
 
-Headless UI is a spin on the concept of renderless components, which're defined as:
+Headless UI is a spin on the concept of renderless components and if you're not in the know:
 
 > A renderless component is a component that doesn't render any of its own HTML.  
 > Instead it **only manages state and behavior**, exposing a single scoped slot that gives the parent/consumer complete control over what should actually be rendered.
@@ -16,20 +31,11 @@ Now this sounds familiar to a feature we're used to in Svelte... an action is de
 
 > A function that is called when an element is created, taking the element and optional parameters as arguments.
 
-And you can do all sorts of things with actions. It's a simple concept that can allow you to do the same thing of injecting logic into HTML. Since it's just a function performed on an element, you can coordinate all sorts of crazy things and create interop with your own state.
+And you can do all sorts of things with actions. It's a simple concept that can allow you to do the same thing managing state and behaviors with HTML. Since it's just a function performed on an element, you can coordinate all sorts of crazy things and create interop with your own state. And speaking of state, we have a simple solution: stores.
 
-## Status
+So that's what this library is about. A Headless UI port for Svelte, using **actions and stores**. Sometimes it uses components for their slot props, especially when it doesn't make sense to manually manage each piece of state in a list, but most of the time all it is actions and stores (oh and of course a whoooole lotta vanilla JS DOM manipulation).
 
-✔ Menu  
-✔ Toggle  
-🚧 Listbox (Working on it right now!)
-
-🛣 Roadmap
-
-- Dialog (Modal)
-- Popover (seems like a simple `<nav>` link menu?)
-- Radio Group (low priority in favor of `<input type="radio">`s)
-- Disclosure (low priority in favor of `<summary>`)
+p.s. While actions are, in my opinion, a better solution for the consumer of the API... people may be wondering if it's even a departure from how Headless UI components work. It's mostly because of the degree of control over the render logic that Headless has in its implementation, which has no easy equivalent in Svelte. With actions and stores, the render logic doesn't really have to be considered as the consumer gets to build with good ol' elements. For the maintainer, it's a lot of verbose vanilla DOM code to write, but hey the consumer gets to keep all the element directives, power, and conveniences Svelte offers.
 
 <details> <summary>Notes</summary>
 This is a Svelte project adapting Headless-UI's (React) functionality to Svelte. Its end goal is just to have the functionality and accessibility of Headless-UI as a few components with predefined unstyled elements.
@@ -54,7 +60,7 @@ Not too fleshed out at the moment, feel free to ask questions so that usecases c
 
 ```svelte
 <script>
-import { useMenu } from 'ashui'
+import { useMenu } from 'sashui'
 const Menu = useMenu()
 </script>
 
@@ -86,7 +92,7 @@ Toggle are distinct from switches in that switches have on/off text indicators. 
 ```svelte
 <!-- basic usage -->
 <script>
-import { toggle } from 'ashui'
+import { toggle } from 'sashui'
 let pressed
 </script>
 <button on:change={()=>(pressed = !pressed)} use:toggle={pressed} />
