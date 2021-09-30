@@ -1,4 +1,22 @@
-# shlui (Svelte Headless UI)
+# Ash UI
+
+Short for Action Svelte Headless UI.
+
+## Why?
+
+Headless UI is a spin on the concept of renderless components, which're defined as:
+
+> A renderless component is a component that doesn't render any of its own HTML.  
+> Instead it **only manages state and behavior**, exposing a single scoped slot that gives the parent/consumer complete control over what should actually be rendered.
+> [source](https://adamwathan.me/renderless-components-in-vuejs/)
+
+They're used to inject logic into HTML we're used to working with.
+
+Now this sounds familiar to a feature we're used to in Svelte... an action is defined as:
+
+> A function that is called when an element is created, taking the element and optional parameters as arguments.
+
+And you can do all sorts of things with actions. It's a simple concept that can allow you to do the same thing of injecting logic into HTML. Since it's just a function performed on an element, you can coordinate all sorts of crazy things and create interop with your own state.
 
 ## Status
 
@@ -36,7 +54,7 @@ Not too fleshed out at the moment, feel free to ask questions so that usecases c
 
 ```svelte
 <script>
-import { useMenu } from '$lib/shui/menu/useMenu'
+import { useMenu } from 'ashui'
 const Menu = useMenu()
 </script>
 
@@ -68,6 +86,7 @@ Toggle are distinct from switches in that switches have on/off text indicators. 
 ```svelte
 <!-- basic usage -->
 <script>
+import { toggle } from 'ashui'
 let pressed
 </script>
 <button on:change={()=>(pressed = !pressed)} use:toggle={pressed} />
