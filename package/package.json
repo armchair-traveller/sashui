@@ -1,6 +1,6 @@
 {
   "name": "sashui",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "peerDependencies": {
     "svelte": "^3.34.0"
   },

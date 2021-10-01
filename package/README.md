@@ -1,5 +1,7 @@
 # Sash UI
 
+![package version](https://img.shields.io/npm/v/sashui?color=%23ff3e00&label=version&style=for-the-badge)
+
 Short for **S**velte **A**ction **S**tores & **H**eadless **UI**.
 
 **Installation**: simply run `npm i -D sashui`
@@ -56,6 +58,8 @@ Some additional comments... I find it pretty interesting the amount of vanilla D
 
 Not too fleshed out at the moment, feel free to ask questions so that usecases can be added to the docs. Most actions/components have JSdoc examples and notes for usage. This section will only cover basic code snippets, which should be sufficient to piece together if you have basic knowledge of elements and have seen the Headless-UI React docs/snippets. Please use GitHub's table of contents navigation feature for an overview and to quickly zip to parts you need.
 
+Transition implementation is skipped in favor of Svelte's native transitions / animations,
+
 ### Menu
 
 ```svelte
@@ -90,14 +94,14 @@ If you bind to the menu element, it also has attached to it some of the internal
 Toggle are distinct from switches in that switches have on/off text indicators. See [MDN `<label>` docs](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/label) for label usage.
 
 ```svelte
-<!-- basic usage -->
+<!-- Basic usage -->
 <script>
 import { toggle } from 'sashui'
 let pressed
 </script>
 <button on:change={()=>(pressed = !pressed)} use:toggle={pressed} />
 
-<!-- For labels, use how you'd normally use it how you'd normally use a label. -->
+<!-- For labels, use it like how you'd normally use a label. -->
 <label>
   My toggle
   <button on:change={()=>(pressed = !pressed)} use:toggle={pressed} />
@@ -134,4 +138,4 @@ https://mobile.twitter.com/leander__g/status/1363100744350597123
 
 https://mobile.twitter.com/opensas/status/1346236765380759552
 
-Publish notes: Sp far, only entrypoint is from `./index.js`. Only dependency should be `svelte` as a `peerDependency`.
+Publish notes: Sp far, only entrypoint is from `./index.js`. Only dependency should be `svelte` as a `peerDependency`... Or you know, just copy paste your previous `package.json`. No shame, that's better and faster.

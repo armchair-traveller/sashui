@@ -34,7 +34,7 @@ const Menu = useMenu()
   </menu>
 {/if}
 ```
- * Uses closures, stores, and elements to handle state. Doesn't use context so theoretically you could use it outside
+* Uses closures, stores, and elements to handle state. Doesn't use context so theoretically you could use it outside
 * the script tag... but not recommended.
 * 
 * Note: button/input disabled uses native `disabled` attribute. Please use elements that have valid disabled attributes if you plan to disable them.
@@ -47,7 +47,9 @@ export function useMenu() {
     menuEl,
     isOpen = false,
     /** store for currently selected element */
-    selected = writable(null)
+    selected = writable(null),
+    menuId = writable(null),
+    buttonId = writable(null)
   // Attach store: open state // * Object.assign doesn't get inferred types
   {
     const { subscribe, set, update } = writable(false)
@@ -60,8 +62,11 @@ export function useMenu() {
   Menu.button = (el) => {
     buttonEl = el
     buttonEl.ariaHasPopup = true
-    buttonEl.id = `sashui-menubutton-${generateId()}`
-    const MenuUnsub = Menu.subscribe((isOpen) => (buttonEl.ariaExpanded = isOpen))
+    buttonId.set((buttonEl.id = `sashui-menubutton-${generateId()}`))
+    const MenuUnsub = Menu.subscribe((isOpen) => (buttonEl.ariaExpanded = isOpen)),
+      menuIdUnsub = menuId.subscribe((id) =>
+        id ? buttonEl.setAttribute('aria-controls', id) : buttonEl.removeAttribute('aria-controls')
+      )
     const cleanup = addEvts(buttonEl, {
       click(e) {
         if (isOpen) closeMenu()
@@ -88,8 +93,7 @@ export function useMenu() {
         function openTick() {
           e.preventDefault()
           e.stopPropagation()
-          openMenu()
-          return tick()
+          return openMenu()
         }
       },
       keyup(e) {
@@ -101,8 +105,10 @@ export function useMenu() {
 
     return {
       destroy() {
-        MenuUnsub()
         cleanup()
+        menuIdUnsub()
+        MenuUnsub()
+        buttonId.set(null)
       },
     }
   }
@@ -113,8 +119,10 @@ export function useMenu() {
 
   return Menu
   // === Main shared functionality
-  function openMenu() {
+  async function openMenu() {
     Menu.set(true)
+    await tick()
+    menuEl?.focus({ preventScroll: true })
   }
   async function closeMenu() {
     Menu.set(false)
@@ -138,16 +146,17 @@ export function useMenu() {
 
     const itemsWalker = elWalker(menuEl, (el) => el.getAttribute('role') == 'menuitem' && !el.disabled)
 
-    menuEl.id = `sashui-menu-${generateId()}`
-    buttonEl?.setAttribute('aria-controls', menuEl.id)
+    menuId.set((menuEl.id = `sashui-menu-${generateId()}`))
     menuEl.setAttribute('role', 'menu')
     menuEl.setAttribute('tabindex', 0)
-    menuEl.setAttribute('aria-labelledby', buttonEl?.id)
     const selectedUnsub = selected.subscribe((el) =>
-      el?.id ? menuEl.setAttribute('aria-activedescendant', el.id) : menuEl.removeAttribute('aria-activedescendant')
-    )
+        el?.id ? menuEl.setAttribute('aria-activedescendant', el.id) : menuEl.removeAttribute('aria-activedescendant')
+      ),
+      buttonIdUnsub = buttonId.subscribe((id) =>
+        id ? menuEl.setAttribute('aria-labelledby', id) : menuEl.removeAttribute('aria-labelledby')
+      )
 
-    menuEl.focus({ preventScroll: true })
+    menuEl.focus({ preventScroll: true }) // a little redundant, but just in case consumer sets the menu state manually
 
     function clickOutside(e) {
       if (menuEl.contains(e.target) || buttonEl.contains(e.target)) return
@@ -214,13 +223,19 @@ export function useMenu() {
             break
         }
       },
+      keyup(e) {
+        // Required for firefox, event.preventDefault() in handleKeyDown for the Space key doesn't cancel the handleKeyUp,
+        // which in turn triggers a *click*.
+        e.key == ' ' && e.preventDefault()
+      },
     })
     return {
       destroy() {
         window.removeEventListener('click', clickOutside)
         rmEvts()
         selectedUnsub()
-        buttonEl?.removeAttribute('aria-controls')
+        buttonIdUnsub()
+        menuId.set(null)
       },
     }
 

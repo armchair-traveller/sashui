@@ -26,7 +26,7 @@ const Menu = useMenu()
   </menu>
 {/if}
 ```
- * Uses closures, stores, and elements to handle state. Doesn't use context so theoretically you could use it outside
+* Uses closures, stores, and elements to handle state. Doesn't use context so theoretically you could use it outside
 * the script tag... but not recommended.
 *
 * Note: button/input disabled uses native `disabled` attribute. Please use elements that have valid disabled attributes if you plan to disable them.
