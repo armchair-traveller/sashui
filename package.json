@@ -1,6 +1,17 @@
 {
   "name": "sashui",
-  "version": "0.0.2",
+  "version": "0.0.4",
+  "description": "Svelte Action Stores & Headless UI.",
+  "main": "index.js",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/armchair-traveller/sashui.git",
+    "directory": "package"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "dev": "svelte-kit dev",
     "build": "svelte-kit build",
