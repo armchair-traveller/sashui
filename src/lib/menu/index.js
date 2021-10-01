@@ -47,7 +47,9 @@ export function useMenu() {
     menuEl,
     isOpen = false,
     /** store for currently selected element */
-    selected = writable(null)
+    selected = writable(null),
+    menuId = writable(null),
+    buttonId = writable(null)
   // Attach store: open state // * Object.assign doesn't get inferred types
   {
     const { subscribe, set, update } = writable(false)
@@ -60,8 +62,11 @@ export function useMenu() {
   Menu.button = (el) => {
     buttonEl = el
     buttonEl.ariaHasPopup = true
-    buttonEl.id = `sashui-menubutton-${generateId()}`
-    const MenuUnsub = Menu.subscribe((isOpen) => (buttonEl.ariaExpanded = isOpen))
+    buttonId.set((buttonEl.id = `sashui-menubutton-${generateId()}`))
+    const MenuUnsub = Menu.subscribe((isOpen) => (buttonEl.ariaExpanded = isOpen)),
+      menuIdUnsub = menuId.subscribe((id) =>
+        id ? buttonEl.setAttribute('aria-controls', id) : buttonEl.removeAttribute('aria-controls')
+      )
     const cleanup = addEvts(buttonEl, {
       click(e) {
         if (isOpen) closeMenu()
@@ -101,8 +106,10 @@ export function useMenu() {
 
     return {
       destroy() {
-        MenuUnsub()
         cleanup()
+        menuIdUnsub()
+        MenuUnsub()
+        buttonId.set(null)
       },
     }
   }
@@ -138,14 +145,15 @@ export function useMenu() {
 
     const itemsWalker = elWalker(menuEl, (el) => el.getAttribute('role') == 'menuitem' && !el.disabled)
 
-    menuEl.id = `sashui-menu-${generateId()}`
-    buttonEl?.setAttribute('aria-controls', menuEl.id)
+    menuId.set((menuEl.id = `sashui-menu-${generateId()}`))
     menuEl.setAttribute('role', 'menu')
     menuEl.setAttribute('tabindex', 0)
-    menuEl.setAttribute('aria-labelledby', buttonEl?.id)
     const selectedUnsub = selected.subscribe((el) =>
-      el?.id ? menuEl.setAttribute('aria-activedescendant', el.id) : menuEl.removeAttribute('aria-activedescendant')
-    )
+        el?.id ? menuEl.setAttribute('aria-activedescendant', el.id) : menuEl.removeAttribute('aria-activedescendant')
+      ),
+      buttonIdUnsub = buttonId.subscribe((id) =>
+        id ? menuEl.setAttribute('aria-labelledby', id) : menuEl.removeAttribute('aria-labelledby')
+      )
 
     menuEl.focus({ preventScroll: true })
 
@@ -225,7 +233,8 @@ export function useMenu() {
         window.removeEventListener('click', clickOutside)
         rmEvts()
         selectedUnsub()
-        buttonEl?.removeAttribute('aria-controls')
+        buttonIdUnsub()
+        menuId.set(null)
       },
     }
 

@@ -11,6 +11,7 @@ import EditActiveIcon from './_EditActiveIcon.svelte'
 import EditInactiveIcon from './_EditInactiveIcon.svelte'
 
 import { useMenu } from '$lib'
+import { fade } from 'svelte/transition'
 const Menu = useMenu()
 </script>
 
@@ -32,6 +33,7 @@ const Menu = useMenu()
 
       {#if $Menu}
         <menu
+          transition:fade={{ duration: 100 }}
           class="pl-0 absolute right-0 w-56 mt-2 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
           use:Menu
         >
