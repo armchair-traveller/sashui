@@ -93,8 +93,7 @@ export function useMenu() {
         function openTick() {
           e.preventDefault()
           e.stopPropagation()
-          openMenu()
-          return tick()
+          return openMenu()
         }
       },
       keyup(e) {
@@ -120,8 +119,10 @@ export function useMenu() {
 
   return Menu
   // === Main shared functionality
-  function openMenu() {
+  async function openMenu() {
     Menu.set(true)
+    await tick()
+    menuEl?.focus({ preventScroll: true })
   }
   async function closeMenu() {
     Menu.set(false)
@@ -155,7 +156,7 @@ export function useMenu() {
         id ? menuEl.setAttribute('aria-labelledby', id) : menuEl.removeAttribute('aria-labelledby')
       )
 
-    menuEl.focus({ preventScroll: true })
+    menuEl.focus({ preventScroll: true }) // a little redundant, but just in case consumer sets the menu state manually
 
     function clickOutside(e) {
       if (menuEl.contains(e.target) || buttonEl.contains(e.target)) return
