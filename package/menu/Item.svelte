@@ -15,24 +15,24 @@ function setup() {
   const menuEl = el.closest('[role=menu]')
   if (!menuEl) throw new Error('Missing parent menu element.')
 
-  const unsub = menuEl?.selected.subscribe((selectedEl) => (active = selectedEl == el))
+  const unsub = menuEl?.Menu.selected.subscribe((selectedEl) => (active = selectedEl == el))
 
   el.setAttribute('role', 'menuitem')
   el.setAttribute('tabindex', -1)
   el.id = `sashui-menuitem-${id}`
 
   function handleMove() {
-    if (!active) menuEl.items.reset(el)
+    if (!active) menuEl.Menu.reset(el)
   }
   function handleLeave() {
-    if (active) menuEl.items.reset()
+    if (active) menuEl.Menu.reset()
   }
   const rmvEvts = addEvts(el, {
     focus() {
-      menuEl.items.reset(el)
+      menuEl.Menu.reset(el)
     },
     click() {
-      menuEl.items.closeMenu()
+      menuEl.Menu.closeMenu()
     },
     pointermove: handleMove,
     mousemove: handleMove,

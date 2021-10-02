@@ -46,8 +46,6 @@ p.s. While actions are, in my opinion, a better solution for the consumer of the
 <details> <summary>Notes</summary>
 This is a Svelte project adapting Headless-UI's (React) functionality to Svelte. Its end goal is just to have the functionality and accessibility of Headless-UI as a few components with predefined unstyled elements.
 
-<strike>It won't provide the same wrapper/abstraction API that Headless gives as the Tailwind Labs team will be spearheading that effort when they make their way to Svelte. (Honestly, this is just a thinly veiled disclaimer to say I can't figure out a clean API for Svelte that replicates the flexibility of Headless without killing SSR... so I'm at least building its expected result first and seeing if I where I can take it from there.)</strike>
-
 There was goal of a demo form, mostly serving as examples of accessible components for reference, rather than as a library... however it turns out that an actual implementation was a more attractive proposition. I had a repo called IncluSvelte that was aiming to be a demo, but since headless-ui is more clearly defined I opted for this library.
 
 **Current status**: Most abstractions are perfectly working, save for SSR. Well... don't quote me on that as there're no tests in code, only manual tests (however I did iron out some logic that could cause issues). There're a few differences that're made intentionally by design, sometimes for UX reasons, but mainly to fit the usecase of "enhancing" elements with interactivity, rather than straight up giving components. This way, all the power of Svelte element directives are available to the consumer.

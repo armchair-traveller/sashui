@@ -18,8 +18,10 @@ Short for **S**velte **A**ction **S**tores & **H**eadless **UI**.
 
 - Dialog (Modal)
 - Popover (seems like a simple `<nav>` link menu?)
+- Switch? (A toggle isn't a switch! These use checked aria attributes instead of pressed. It should only take a minute to create, but isn't a priority right now.)
 - Radio Group (low priority in favor of `<input type="radio">`s)
 - Disclosure (low priority in favor of `<summary>`)
+- Possibly use inspiration for more components in libs like Radix UI and Chakra UI, just checking behavior & attributes (excluding data prop), ignoring code
 
 ## Why?
 
@@ -43,8 +45,6 @@ p.s. While actions are, in my opinion, a better solution for the consumer of the
 
 <details> <summary>Notes</summary>
 This is a Svelte project adapting Headless-UI's (React) functionality to Svelte. Its end goal is just to have the functionality and accessibility of Headless-UI as a few components with predefined unstyled elements.
-
-<strike>It won't provide the same wrapper/abstraction API that Headless gives as the Tailwind Labs team will be spearheading that effort when they make their way to Svelte. (Honestly, this is just a thinly veiled disclaimer to say I can't figure out a clean API for Svelte that replicates the flexibility of Headless without killing SSR... so I'm at least building its expected result first and seeing if I where I can take it from there.)</strike>
 
 There was goal of a demo form, mostly serving as examples of accessible components for reference, rather than as a library... however it turns out that an actual implementation was a more attractive proposition. I had a repo called IncluSvelte that was aiming to be a demo, but since headless-ui is more clearly defined I opted for this library.
 
@@ -83,17 +83,22 @@ const Menu = useMenu()
 
 `$Menu` makes use of Svelte's auto-subscription syntax. Defaults to `false`. You can also use it to open and close the menu programatically (e.g. `$Menu = false`), though closing events are already automatically managed by the menu.
 
-If you bind to the menu element, it also has attached to it some of the internal helpers:
+Menu also has some programmatic helpers you can invoke (that're used internally):
 
-- `menuEl.selected`: A writable store with the current selected menuitem element. You can also set the selected menuitem programatically, which will enable `active` on it, or set `null` for no selection.
-- `menuEl.items`: An object containing menu helpers `{ reset, gotoItem, closeMenu }`
-  - `reset(el)` resets the selected el, or if an el is passed in changes currently selected to it.
-  - `gotoItem(idx)` sets current selected item to the item index passed in, accepts negative indexing. By default uses first item. Only responsible for valid indexes.
-  - `closeMenu()` closes the menu and focuses the menu button afterwards, which is the default behavior of most events causing the menu to close.
+- `Menu.selected`: A writable store with the current selected menuitem element. You can also set the selected menuitem programatically, which will enable `active` on it, or set it to `null` for no selection. (Note: This doesn't reset the currently selected tree walker, so it's better to use `Menu.reset()` if setting menuitem. This is more for reading current selections and reacting to them via subscription.)
+- `Menu.openMenu()`: Opens the menu and focuses it
+- While menu is on the DOM (open), you can use these menu helpers (they don't make any checks for open state so you'll have to guard it yourself if needed):
+  - `Menu.reset(el?: HTMLElement)` resets the selected el, or if an el is passed in changes currently selected to it.
+  - `Menu.gotoItem(idx?: number)` sets current selected item to the item index passed in, idx starts at 1 instead of 0, and accepts negative indexing. By default uses first item. Only responsible for valid indexes.
+  - `Menu.closeMenu()` closes the menu and focuses the menu button afterwards, which is the default behavior of most events causing the menu to close.
+  - `Menu.nextItem()` Select next item
+  - `Menu.prevItem()` Select previous item
+
+Note: It is possible to expose the search method if there's a use case for it! It just involves a little bit of function param/state manipulation because it currently relies on closure scopes. Open a discussion/issue if you have one in mind or have suggestions!
 
 ### Toggle
 
-Toggle are distinct from switches in that switches have on/off text indicators. See [MDN `<label>` docs](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/label) for label usage.
+Toggles are distinct from switches in that switches have on/off text indicators. See [MDN `<label>` docs](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/label) for label usage.
 
 ```svelte
 <!-- Basic usage -->

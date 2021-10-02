@@ -38,9 +38,15 @@ export function useMenu(): {
     (node: any): {
         destroy(): void;
     };
+    selected: import("svelte/store").Writable<any>;
+    /** Subscribe to menu open state */
     subscribe: (this: void, run: import("svelte/store").Subscriber<boolean>, invalidate?: (value?: boolean) => void) => import("svelte/store").Unsubscriber;
+    /** Set menu open state */
     set: (this: void, value: boolean) => void;
+    /** Update menu open state */
     update: (this: void, updater: import("svelte/store").Updater<boolean>) => void;
+    openMenu: () => Promise<void>;
+    closeMenu: () => Promise<void>;
     /** Button action */
     button(el: any): {
         destroy(): void;

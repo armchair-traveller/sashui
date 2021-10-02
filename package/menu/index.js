@@ -45,18 +45,24 @@ const Menu = useMenu()
 export function useMenu() {
   var buttonEl,
     menuEl,
-    isOpen = false,
-    /** store for currently selected element */
-    selected = writable(null),
+    isOpen = false
+  /** store for currently selected element */
+  const selected = Menu.selected = writable(null), // prettier-ignore
     menuId = writable(null),
     buttonId = writable(null)
   // Attach store: open state // * Object.assign doesn't get inferred types
   {
     const { subscribe, set, update } = writable(false)
+    /** Subscribe to menu open state */
     Menu.subscribe = subscribe
+    /** Set menu open state */
     Menu.set = set
+    /** Update menu open state */
     Menu.update = update
   }
+
+  Menu.openMenu = openMenu
+  Menu.closeMenu = closeMenu
 
   /** Button action */
   Menu.button = (el) => {
@@ -83,11 +89,11 @@ export function useMenu() {
           case 'Enter':
           case 'ArrowDown':
             await openTick()
-            menuEl.items.gotoItem()
+            Menu?.gotoItem()
             break
           case 'ArrowUp':
             await openTick()
-            menuEl.items.gotoItem(-1)
+            Menu?.gotoItem(-1)
             break
         }
         function openTick() {
@@ -132,17 +138,15 @@ export function useMenu() {
 
   /** Menu action store.
    *
-   * Menu store gives open state, which can be set to manually manage open/close if desired.
+   * Menu store gives open state, which can be set to manually manage open/close if desired. It also has many helpers usable both programmatically and internally.
    *
-   * Currently selected el is attached to the `<menu>` as a store. In the off chance you want it, use `bind:this` and get the el's `.selected`.
-   *
-   * * Theoretically, actions make it easy to incorporate options. No options are obvious at the moment, so none are present.
+   * * Theoretically, actions make it easy to incorporate options via params. No options are obvious at the moment, so none are present. And custom stores/methods can be used to easily manage that, too.
    */
   function Menu(node) {
     menuEl = node
-    // Attach helpers and stores to menu el as if it's a context, used for `Item.svelte` & button handlers
-    menuEl.selected = selected
-    menuEl.items = { reset, gotoItem, closeMenu }
+    // Attach helpers to Menu, which is on menu el as if it's a context, used for programmatic purposes e.g. `Item.svelte` & button handlers, consumer API
+    // These helpers are always available once set, but should only be run if the menu element is on the DOM! (They don't do any checks)
+    menuEl.Menu = Object.assign(Menu, { reset, gotoItem, nextItem, prevItem })
 
     const itemsWalker = elWalker(menuEl, (el) => el.getAttribute('role') == 'menuitem' && !el.disabled)
 
@@ -239,6 +243,7 @@ export function useMenu() {
       },
     }
 
+    /** Search by str, clears timeout but doesn't set it on invoke. */
     function search(char = '') {
       clearTimeout(cancelClearSearch)
       searchQuery += char.toLowerCase()
