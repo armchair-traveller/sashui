@@ -11,6 +11,7 @@ Short for **S**velte **A**ction **S**tores & **H**eadless **UI**.
 ## Status
 
 ✔ Menu  
+✔ Switch (A toggle isn't a switch! These use checked aria attributes instead of pressed.)
 ✔ Toggle  
 🚧 Listbox (Working on it right now!)
 
@@ -18,7 +19,6 @@ Short for **S**velte **A**ction **S**tores & **H**eadless **UI**.
 
 - Dialog (Modal)
 - Popover (seems like a simple `<nav>` link menu?)
-- Switch? (A toggle isn't a switch! These use checked aria attributes instead of pressed. It should only take a minute to create, but isn't a priority right now.)
 - Radio Group (low priority in favor of `<input type="radio">`s)
 - Disclosure (low priority in favor of `<summary>`)
 - Possibly use inspiration for more components in libs like Radix UI and Chakra UI, just checking behavior & attributes (excluding data prop), ignoring code
