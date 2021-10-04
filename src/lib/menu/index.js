@@ -64,7 +64,7 @@ export function useMenu() {
   Menu.openMenu = openMenu
   Menu.closeMenu = closeMenu
 
-  /** Button action */
+  /** Button action, expected to be used on a `<button>`-like el. Opens and closes the menu. */
   Menu.button = (el) => {
     buttonEl = el
     buttonEl.ariaHasPopup = true
@@ -119,6 +119,7 @@ export function useMenu() {
     }
   }
 
+  /** A renderless component for a menu item. Generally, it should be wrapped around a button. Exposes an active slot prop for whether the current item is active. */
   Menu.Item = Item
 
   onMount(() => Menu.subscribe((open) => (isOpen = open)))
@@ -136,7 +137,7 @@ export function useMenu() {
     buttonEl?.focus({ preventScroll: true })
   }
 
-  /** Menu action store.
+  /** Menu action store. Ideal tag: `<menu>`
    *
    * Menu store gives open state, which can be set to manually manage open/close if desired. It also has many helpers usable both programmatically and internally.
    *
