@@ -45,7 +45,7 @@ import { addEvts } from './utils/action'
  *
  * For labeling, default `<label>` will work as expected.
  *
- * Note for rare usecase: If this action is used on an element that isn't a button / input type=button/submit, please add
+ * Note for rare usecase: Ideal tag is `<button>`-like, but if this action is used on an element that isn't a button / input type=button/submit please add
  * `role="button" tabindex="0"`. In this scenario, `<label>`'s click event will also not work according to normal usage,
  * so if click behavior is desired just manually add a click event to set the press state.
  */
@@ -62,7 +62,7 @@ export const Switch = createSwitchToggle(false)
  *
  * For labeling, default `<label>` will work as expected.
  *
- * Note for rare usecase: If this action is used on an element that isn't a button / input type=button/submit, please add
+ * Note for rare usecase: Ideal tag is `<button>`-like, but if this action is used on an element that isn't a button / input type=button/submit please add
  * `role="button" tabindex="0"`. In this scenario, `<label>`'s click event will also not work according to normal usage,
  * so if click behavior is desired just manually add a click event to set the press state.
  */
