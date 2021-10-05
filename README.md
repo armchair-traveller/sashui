@@ -37,7 +37,7 @@ Now this sounds familiar to a feature we're used to in Svelte... an action is de
 
 > A function that is called when an element is created, taking the element and optional parameters as arguments.
 
-And you can do all sorts of things with actions. It's a simple concept that can allow you to do the same thing managing state and behaviors with HTML. Since it's just a function performed on an element, you can coordinate all sorts of crazy things and create interop with your own state. And speaking of state, we have a simple solution: stores.
+And you can do all sorts of things with actions. It's a simple concept that can allow you to do the same thing managing state and behaviors with elements, and in my humble opinion is a better step forward towards the main goals of renderless components. Since it's just a function performed on an element, you can coordinate all sorts of crazy things and create interop with your own state. And speaking of state, we have a simple solution: stores.
 
 So that's what this library is about. A Headless UI port for Svelte, using **actions and stores**. Sometimes it uses components for their slot props, especially when it doesn't make sense to manually manage each piece of state in a list, but most of the time all it is actions and stores (oh and of course a whoooole lotta vanilla JS DOM manipulation).
 
@@ -60,7 +60,11 @@ Some additional comments... I find it pretty interesting the amount of vanilla D
 
 Not too fleshed out at the moment, feel free to ask questions so that usecases can be added to the docs. Most actions/components have JSdoc examples and notes for usage. This section will only cover basic code snippets, which should be sufficient to piece together if you have basic knowledge of elements and have seen the Headless-UI React docs/snippets. Please use GitHub's table of contents navigation feature for an overview and to quickly zip to parts you need.
 
-Transition implementation is skipped in favor of Svelte's native transitions / animations,
+Transition implementation is skipped in favor of Svelte's native transitions / animations.
+
+It's important to understand that the library's implementation is using actions to enhance the raw elements the consumer provides. It utilizes the native interaction benefits of HTML when possible, instead of masquerading or overriding them. This means **less package size and better performance**, and well... elements are the most battle tested and stable APIs a web developer can have when it comes to components. Many elements have their own specific interactions and semantic HTML purposes. This means that you should use the correct markup, usually provided in examples/docs. This is inline with how Svelte elements work -- for example you can only bind to valid attributes on any particular HTML element, and they offer different conveniences depending on the element. This library isn't an excuse to abuse and throw a bunch of divs on your page or disregard any semblance of semantic HTML, merely to provide an easy, quick entrypoint without overloading your brain with the component's implementation details. A simple docs minimal markup copy+paste is the only required work that has to be done. It's like working with normal semantic HTML, so if you're already familiar with that then you will feel at home, perhaps with little use for the docs very quickly.
+
+That said, this library attempts to be flexible where it makes sense, and provide conveniences where/when it is possible. You aren't strictly bound to a certain element for everything, e.g. `<button>`, `<input type="submit">`, `<input type="button">` will often be sufficiently interchangeable depending on context, and sometimes custom events are dispatched on elements for consistency. (Keep in mind that it's certainly easy to JSDoc valid elements for each action/component later on which would be very convenient, if time allows work to be done on that...)
 
 ### Menu
 
