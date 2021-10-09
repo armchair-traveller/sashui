@@ -120,7 +120,16 @@ export function useMenu() {
   }
 
   /** A renderless component for a menu item. Generally, it should be wrapped around a button. Exposes an active slot prop for whether the current item is active. */
-  Menu.Item = Item
+  Menu.Item =
+    typeof window == 'undefined'
+      ? Item // prevent SSR from tripping
+      : class MenuItem extends Item {
+          constructor(options) {
+            options.props = options.props || {}
+            options.props.Menu = Menu // pass in Menu action store to component
+            super(options)
+          }
+        }
 
   onMount(() => Menu.subscribe((open) => (isOpen = open)))
 
