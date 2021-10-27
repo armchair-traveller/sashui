@@ -13,11 +13,11 @@ Short for **S**velte **A**ction **S**tores & **H**eadless **UI**.
 ✔ Menu  
 ✔ Switch (A toggle isn't a switch! These use checked aria attributes instead of pressed.)
 ✔ Toggle  
-🚧 Listbox (Working on it right now!)
+🚧 Dialog (Modal) - Working on it right now!
 
 ### 🛣 Roadmap
 
-- Dialog (Modal)
+- Listbox (Select)
 - Popover (seems like a simple `<nav>` link menu?)
 - Radio Group (low priority in favor of `<input type="radio">`s)
 - Disclosure (low priority in favor of `<summary>`)
