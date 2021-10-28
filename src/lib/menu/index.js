@@ -1,6 +1,5 @@
 import { onMount, tick } from 'svelte'
 import { get, writable } from 'svelte/store'
-import { frontmost } from '$lib/stores/frontmost'
 import { addEvts } from '../utils/action'
 import { elWalker } from '../utils/elWalker'
 import { generateId } from '../utils/generateId'
@@ -46,8 +45,7 @@ const Menu = useMenu()
 export function useMenu() {
   var buttonEl,
     menuEl,
-    isOpen = false,
-    isFrontmost = true
+    isOpen = false
   /** store for currently selected element */
   const selected = Menu.selected = writable(null), // prettier-ignore
     menuId = writable(null),
@@ -170,13 +168,12 @@ export function useMenu() {
       ),
       buttonIdUnsub = buttonId.subscribe((id) =>
         id ? menuEl.setAttribute('aria-labelledby', id) : menuEl.removeAttribute('aria-labelledby')
-      ),
-      frontmostUnsub = frontmost.subscribe((front) => (isFrontmost = front))
+      )
 
     menuEl.focus({ preventScroll: true }) // a little redundant, but just in case consumer sets the menu state manually
 
     function clickOutside(e) {
-      if (menuEl.contains(e.target) || buttonEl.contains(e.target) || !isFrontmost) return
+      if (menuEl.contains(e.target) || buttonEl.contains(e.target)) return
       closeMenu()
     }
     window.addEventListener('click', clickOutside)
@@ -185,7 +182,6 @@ export function useMenu() {
       cancelClearSearch = null
     const rmEvts = addEvts(menuEl, {
       keydown(e) {
-        if (!isFrontmost) return
         function keyModifier() {
           e.preventDefault()
           e.stopPropagation()
@@ -250,7 +246,6 @@ export function useMenu() {
         rmEvts()
         selectedUnsub()
         buttonIdUnsub()
-        frontmostUnsub()
         menuId.set(null)
       },
     }
