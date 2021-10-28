@@ -4,6 +4,7 @@ import { onDestroy } from 'svelte'
 import SlotEl from '../SlotEl.svelte'
 import { addEvts } from '../utils/action'
 import { generateId } from '../utils/generateId'
+export let Menu
 let el,
   active = false,
   cleanup = null,
@@ -11,11 +12,6 @@ let el,
 $: if (el) setup()
 function setup() {
   cleanup?.()
-  // get element "context" (we just attach props to the menu el)
-  const menuEl = el.closest('[role=menu]')
-  if (!menuEl) throw new Error('Missing parent menu element.')
-
-  const { Menu } = menuEl
   const unsub = Menu.selected.subscribe((selectedEl) => (active = selectedEl == el))
 
   el.setAttribute('role', 'menuitem')
