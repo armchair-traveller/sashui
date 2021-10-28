@@ -13,7 +13,7 @@ Short for **S**velte **A**ction **S**tores & **H**eadless **UI**.
 ✔ Menu  
 ✔ Switch (A toggle isn't a switch! These use checked aria attributes instead of pressed.)
 ✔ Toggle  
-🚧 Dialog (Modal) - Working on it right now!
+✔ Dialog (Modal)
 
 ### 🛣 Roadmap
 
@@ -65,6 +65,11 @@ Transition implementation is skipped in favor of Svelte's native transitions / a
 It's important to understand that the library's implementation is using actions to enhance the raw elements the consumer provides. It utilizes the native interaction benefits of HTML when possible, instead of masquerading or overriding them. This means **less package size and better performance**, and well... elements are the most battle tested and stable APIs a web developer can have when it comes to components. Many elements have their own specific interactions and semantic HTML purposes. This means that you should use the correct markup, usually provided in examples/docs. This is inline with how Svelte elements work -- for example you can only bind to valid attributes on any particular HTML element, and they offer different conveniences depending on the element. This library isn't an excuse to abuse and throw a bunch of divs on your page or disregard any semblance of semantic HTML, merely to provide an easy, quick entrypoint without overloading your brain with the component's implementation details. A simple docs minimal markup copy+paste is the only required work that has to be done. It's like working with normal semantic HTML, so if you're already familiar with that then you will feel at home, perhaps with little use for the docs very quickly.
 
 That said, this library attempts to be flexible where it makes sense, and provide conveniences where/when it is possible. You aren't strictly bound to a certain element for everything, e.g. `<button>`, `<input type="submit">`, `<input type="button">` will often be sufficiently interchangeable depending on context, and sometimes custom events are dispatched on elements for consistency. (Keep in mind that it's certainly easy to JSDoc valid elements for each action/component later on which would be very convenient, if time allows work to be done on that...)
+
+Other general implementation differences:
+
+- Any time you see a `<Description>` component in Headless UI's docs, know that it isn't implemented here as it's simply a `aria-describedby` on the root el set to the `id` of the description element. Literally two attributes. This is left for the consumer to manage in the off chance that they need it, there's simply no need for an extra action/component to manage this.
+- In order to keep things simple, there's no nested anything. It's bad UX anyway but if there's a compelling reason I'm unaware of it can be done.
 
 ### Menu
 

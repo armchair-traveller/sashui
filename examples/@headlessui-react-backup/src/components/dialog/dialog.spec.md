@@ -1,5 +1,7 @@
 # helpers
 
+- inertOthers makes sure all body children elements besides the active portal is `aria-hidden=true`
+
 ---
 
 - Portal should be created.
