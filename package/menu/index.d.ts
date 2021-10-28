@@ -47,10 +47,11 @@ export function useMenu(): {
     update: (this: void, updater: import("svelte/store").Updater<boolean>) => void;
     openMenu: () => Promise<void>;
     closeMenu: () => Promise<void>;
-    /** Button action */
+    /** Button action, expected to be used on a `<button>`-like el. Opens and closes the menu. */
     button(el: any): {
         destroy(): void;
     };
+    /** A renderless component for a menu item. Generally, it should be wrapped around a button. Exposes an active slot prop for whether the current item is active. */
     Item: typeof Item;
 };
 import Item from "./Item.svelte";

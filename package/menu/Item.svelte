@@ -4,6 +4,7 @@ import { onDestroy } from 'svelte'
 import SlotEl from '../SlotEl.svelte'
 import { addEvts } from '../utils/action'
 import { generateId } from '../utils/generateId'
+export let Menu
 let el,
   active = false,
   cleanup = null,
@@ -11,28 +12,24 @@ let el,
 $: if (el) setup()
 function setup() {
   cleanup?.()
-  // get element "context" (we just attach props to the menu el)
-  const menuEl = el.closest('[role=menu]')
-  if (!menuEl) throw new Error('Missing parent menu element.')
-
-  const unsub = menuEl?.Menu.selected.subscribe((selectedEl) => (active = selectedEl == el))
+  const unsub = Menu.selected.subscribe((selectedEl) => (active = selectedEl == el))
 
   el.setAttribute('role', 'menuitem')
   el.setAttribute('tabindex', -1)
   el.id = `sashui-menuitem-${id}`
 
   function handleMove() {
-    if (!active) menuEl.Menu.reset(el)
+    if (!active) Menu.reset(el)
   }
   function handleLeave() {
-    if (active) menuEl.Menu.reset()
+    if (active) Menu.reset()
   }
   const rmvEvts = addEvts(el, {
     focus() {
-      menuEl.Menu.reset(el)
+      Menu.reset(el)
     },
     click() {
-      menuEl.Menu.closeMenu()
+      Menu.closeMenu()
     },
     pointermove: handleMove,
     mousemove: handleMove,

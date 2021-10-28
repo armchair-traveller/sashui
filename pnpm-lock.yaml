@@ -13,7 +13,7 @@ specifiers:
   typescript: ^4.4.3
 
 devDependencies:
-  '@sveltejs/kit': 1.0.0-next.178_svelte@3.38.2
+  '@sveltejs/kit': 1.0.0-next.191_svelte@3.38.2
   autoprefixer: 10.3.6_postcss@8.3.6
   cssnano: 5.0.8_postcss@8.3.6
   postcss: 8.3.6
@@ -76,18 +76,18 @@ packages:
       picomatch: 2.2.3
     dev: true
 
-  /@sveltejs/kit/1.0.0-next.178_svelte@3.38.2:
-    resolution: {integrity: sha512-Hai7bqZkn4JQMQwh8gUMJEbyBeRPIx1oQUhGZjHlH4yIqVf2Oz9Nf4FkGcQAa5eGF907qRhE/gghPpsZk6KkeQ==}
-    engines: {node: ^12.20 || >=14.13}
+  /@sveltejs/kit/1.0.0-next.191_svelte@3.38.2:
+    resolution: {integrity: sha512-ikFKdgr0vcQB5lYqRtj6MUH4yu65le+qNVKxjJOK/Qj7Ev8IjaFKwiX1ppO48X5vJPsW+qAwvk/TqJwSM6VPDA==}
+    engines: {node: '>=14.13'}
     hasBin: true
     peerDependencies:
-      svelte: ^3.43.0
+      svelte: ^3.44.0
     dependencies:
-      '@sveltejs/vite-plugin-svelte': 1.0.0-next.26_svelte@3.38.2+vite@2.6.2
+      '@sveltejs/vite-plugin-svelte': 1.0.0-next.30_svelte@3.38.2+vite@2.6.13
       cheap-watch: 1.0.4
       sade: 1.7.4
       svelte: 3.38.2
-      vite: 2.6.2
+      vite: 2.6.13
     transitivePeerDependencies:
       - diff-match-patch
       - less
@@ -96,12 +96,12 @@ packages:
       - supports-color
     dev: true
 
-  /@sveltejs/vite-plugin-svelte/1.0.0-next.26_svelte@3.38.2+vite@2.6.2:
-    resolution: {integrity: sha512-+Rx3IBa4disskQmr+0/Rh+NYavkM6Vi8BnkTGjKnblawysw4INXkq2WEQBp8luGpUZEkjwczdL9Z9Q2hISvIeA==}
-    engines: {node: ^12.20 || ^14.13.1 || >= 16}
+  /@sveltejs/vite-plugin-svelte/1.0.0-next.30_svelte@3.38.2+vite@2.6.13:
+    resolution: {integrity: sha512-YQqdMxjL1VgSFk4/+IY3yLwuRRapPafPiZTiaGEq1psbJYSNYUWx9F1zMm32GMsnogg3zn99mGJOqe3ld3HZSg==}
+    engines: {node: ^14.13.1 || >= 16}
     peerDependencies:
       diff-match-patch: ^1.0.5
-      svelte: ^3.34.0
+      svelte: ^3.44.0
       vite: ^2.6.0
     peerDependenciesMeta:
       diff-match-patch:
@@ -114,7 +114,7 @@ packages:
       require-relative: 0.8.7
       svelte: 3.38.2
       svelte-hmr: 0.14.7_svelte@3.38.2
-      vite: 2.6.2
+      vite: 2.6.13
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -1902,8 +1902,8 @@ packages:
     resolution: {integrity: sha512-/juG65kTL4Cy2su4P8HjtkTxk6VmJDiOPBufWniqQ6wknac6jNiXS9vU+hO3wgusiyqWlzTbVHi0dyJqRONg3w==}
     dev: true
 
-  /vite/2.6.2:
-    resolution: {integrity: sha512-HSIg9U15LOnbD3CUxX364Pdrm7DUjftuBljowGxvkFHgDZU/SKPqApg9t86MX/Qq1VCO7wS+mGJHlfuTF7c0Sg==}
+  /vite/2.6.13:
+    resolution: {integrity: sha512-+tGZ1OxozRirTudl4M3N3UTNJOlxdVo/qBl2IlDEy/ZpTFcskp+k5ncNjayR3bRYTCbqSOFz2JWGN1UmuDMScA==}
     engines: {node: '>=12.2.0'}
     hasBin: true
     peerDependencies:

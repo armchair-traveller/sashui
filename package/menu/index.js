@@ -64,7 +64,7 @@ export function useMenu() {
   Menu.openMenu = openMenu
   Menu.closeMenu = closeMenu
 
-  /** Button action */
+  /** Button action, expected to be used on a `<button>`-like el. Opens and closes the menu. */
   Menu.button = (el) => {
     buttonEl = el
     buttonEl.ariaHasPopup = true
@@ -119,7 +119,17 @@ export function useMenu() {
     }
   }
 
-  Menu.Item = Item
+  /** A renderless component for a menu item. Generally, it should be wrapped around a button. Exposes an active slot prop for whether the current item is active. */
+  Menu.Item =
+    typeof window == 'undefined'
+      ? Item // prevent SSR from tripping
+      : class MenuItem extends Item {
+          constructor(options) {
+            options.props = options.props || {}
+            options.props.Menu = Menu // pass in Menu action store to component
+            super(options)
+          }
+        }
 
   onMount(() => Menu.subscribe((open) => (isOpen = open)))
 
@@ -136,7 +146,7 @@ export function useMenu() {
     buttonEl?.focus({ preventScroll: true })
   }
 
-  /** Menu action store.
+  /** Menu action store. Ideal tag: `<menu>`
    *
    * Menu store gives open state, which can be set to manually manage open/close if desired. It also has many helpers usable both programmatically and internally.
    *
@@ -146,7 +156,7 @@ export function useMenu() {
     menuEl = node
     // Attach helpers to Menu, which is on menu el as if it's a context, used for programmatic purposes e.g. `Item.svelte` & button handlers, consumer API
     // These helpers are always available once set, but should only be run if the menu element is on the DOM! (They don't do any checks)
-    menuEl.Menu = Object.assign(Menu, { reset, gotoItem, nextItem, prevItem })
+    menuEl.Menu = Object.assign(Menu, { reset, gotoItem, nextItem, prevItem, search })
 
     const itemsWalker = elWalker(menuEl, (el) => el.getAttribute('role') == 'menuitem' && !el.disabled)
 
@@ -220,10 +230,7 @@ export function useMenu() {
             break
 
           default:
-            if (e.key.length == 1) {
-              search(e.key)
-              cancelClearSearch = setTimeout(() => (searchQuery = ''), 350)
-            }
+            if (e.key.length == 1) search(e.key, 350)
             break
         }
       },
@@ -243,14 +250,17 @@ export function useMenu() {
       },
     }
 
-    /** Search by str, clears timeout but doesn't set it on invoke. */
-    function search(char = '') {
+    /** Search by str, clears timeout but doesn't set it on invoke.
+     * @param {number} timeout - if not set, won't clear timeout. Resets timeout if invoked again before clear
+     */
+    function search(char = '', timeout = null) {
       clearTimeout(cancelClearSearch)
       searchQuery += char.toLowerCase()
       const matchedEl = Array.prototype.find.call(menuEl.querySelectorAll('[role=menuitem]:not([disabled])'), (el) =>
         el.textContent.trim().toLowerCase().startsWith(searchQuery)
       )
       if (matchedEl) reset(matchedEl)
+      if (typeof timeout == 'number') cancelClearSearch = setTimeout(() => (searchQuery = ''), timeout)
     }
 
     function nextItem() {
