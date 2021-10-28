@@ -11,7 +11,7 @@ Short for **S**velte **A**ction **S**tores & **H**eadless **UI**.
 ## Status
 
 ✔ Menu  
-✔ Switch (A toggle isn't a switch! These use checked aria attributes instead of pressed.)
+✔ Switch (A toggle isn't a switch! These use checked aria attributes instead of pressed.)  
 ✔ Toggle  
 ✔ Dialog (Modal)
 
