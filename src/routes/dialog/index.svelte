@@ -1,5 +1,5 @@
 <script>
-import { useDialog } from '$lib/dialog'
+import { useDialog } from '$lib'
 import { fade } from 'svelte/transition'
 const dialog = useDialog()
 </script>
