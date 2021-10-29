@@ -98,16 +98,50 @@ Menu also has some programmatic helpers you can invoke (that're used internally)
 - `Menu.openMenu()`: Opens the menu and focuses it
 - While menu is on the DOM (open), you can use these menu helpers (they don't make any checks for open state so you'll have to guard it yourself if needed):
   - `Menu.reset(el?: HTMLElement)` resets the selected el, or if an el is passed in changes currently selected to it.
-  - `Menu.gotoItem(idx?: number)` sets current selected item to the item index passed in, idx starts at 1 instead of 0, and accepts negative indexing. By default uses first item. Only responsible for valid indexes.
+  - `Menu.gotoItem(idx?: number)` sets current selected item to the item index passed in, accepts negative indexing. By default uses first item. Wraps if null.
   - `Menu.closeMenu()` closes the menu and focuses the menu button afterwards, which is the default behavior of most events causing the menu to close.
   - `Menu.nextItem()` Select next item
   - `Menu.prevItem()` Select previous item
 
 Note: It is possible to expose the search method if there's a use case for it! It just involves a little bit of function param/state manipulation because it currently relies on closure scopes. Open a discussion/issue if you have one in mind or have suggestions!
 
-### Toggle
+### Dialog (Modal)
 
-Toggles are distinct from switches in that switches have on/off text indicators. See [MDN `<label>` docs](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/label) for label usage.
+Dialog modal state isn't managed for you. `close` events are dispatched on the element with the trigger cause in `event.detail`.
+
+`useDialog(initialOpen?: Boolean)` - returns `dialog` action store.  
+`$dialog` - Boolean representing dialog open state. Default `false`. Set it to open/close the modal.  
+`use:dialog={initialFocus?: HTMLElement}` - if an initial focus is set, must be a valid focusable element within the modal.
+
+```svelte
+<script>
+import { useDialog } from 'sashui'
+const dialog = useDialog(true)
+</script>
+
+{#if $dialog}
+  <div use:dialog on:close={() => ($dialog = false)} aria-describedby="dialog-desc">
+    <div use:dialog.overlay />
+
+    <h2 use:dialog.title>Deactivate account</h2>
+    <div id="dialog-desc">This will permanently deactivate your account</div>
+
+    <p>
+      Are you sure you want to deactivate your account? All of your data will be permanently removed. This action cannot
+      be undone.
+    </p>
+
+    <button on:click={() => ($dialog = false)}>Deactivate</button>
+    <button on:click={() => ($dialog = false)}>Cancel</button>
+  </div>
+{/if}
+```
+
+Note: Nested modals are not supported as mentioned, to avoid UX antipatterns. If it's absolutely necessary, you can get it working with some difficulty by controlling the state programatically, and it would be easier using multiple roots instead of nesting inside the modal.
+
+### Toggle / Switch
+
+Toggles are distinct from switches in that switches have on/off text indicators. See [MDN `<label>` docs](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/label) for label usage. Switches have similar usage, except imported as `Switch` (pascalcase due to `switch` being a reserved keyword).
 
 ```svelte
 <!-- Basic usage -->
