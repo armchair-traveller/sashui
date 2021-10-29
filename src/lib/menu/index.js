@@ -42,98 +42,89 @@ const Menu = useMenu()
 * @returns `Menu` action store, w/ additional actions, components, and helpers. If not destructured, MUST be capitalized
 * for Svelte to recognize the component(s) attached to it.
 */
-export function useMenu() {
+export function useMenu(initOpen = false) {
   var buttonEl,
     menuEl,
     isOpen = false
-  /** store for currently selected element */
-  const selected = Menu.selected = writable(null), // prettier-ignore
+  const selected = writable(null),
     menuId = writable(null),
     buttonId = writable(null)
-  // Attach store: open state // * Object.assign doesn't get inferred types
-  {
-    const { subscribe, set, update } = writable(false)
-    /** Subscribe to menu open state */
-    Menu.subscribe = subscribe
-    /** Set menu open state */
-    Menu.set = set
-    /** Update menu open state */
-    Menu.update = update
-  }
-
-  Menu.openMenu = openMenu
-  Menu.closeMenu = closeMenu
-
-  /** Button action, expected to be used on a `<button>`-like el. Opens and closes the menu. */
-  Menu.button = (el) => {
-    buttonEl = el
-    buttonEl.ariaHasPopup = true
-    buttonId.set((buttonEl.id = `sashui-menubutton-${generateId()}`))
-    const MenuUnsub = Menu.subscribe((isOpen) => (buttonEl.ariaExpanded = isOpen)),
-      menuIdUnsub = menuId.subscribe((id) =>
-        id ? buttonEl.setAttribute('aria-controls', id) : buttonEl.removeAttribute('aria-controls')
-      )
-    const cleanup = addEvts(buttonEl, {
-      click(e) {
-        if (isOpen) closeMenu()
-        else {
-          e.preventDefault()
-          e.stopPropagation()
-          openMenu()
-        }
-      },
-      async keydown(e) {
-        switch (e.key) {
-          // Ref: https://www.w3.org/TR/wai-aria-practices-1.2/#keyboard-interaction-13
-          case ' ':
-          case 'Enter':
-          case 'ArrowDown':
-            await openTick()
-            Menu?.gotoItem()
-            break
-          case 'ArrowUp':
-            await openTick()
-            Menu?.gotoItem(-1)
-            break
-        }
-        function openTick() {
-          e.preventDefault()
-          e.stopPropagation()
-          return openMenu()
-        }
-      },
-      keyup(e) {
-        // Required for firefox, event.preventDefault() in handleKeyDown for the Space key doesn't cancel the handleKeyUp,
-        // which in turn triggers a *click*.
-        e.key == ' ' && e.preventDefault()
-      },
-    })
-
-    return {
-      destroy() {
-        cleanup()
-        menuIdUnsub()
-        MenuUnsub()
-        buttonId.set(null)
-      },
-    }
-  }
-
-  /** A renderless component for a menu item. Generally, it should be wrapped around a button. Exposes an active slot prop for whether the current item is active. */
-  Menu.Item =
-    typeof window == 'undefined'
-      ? Item // prevent SSR from tripping
-      : class MenuItem extends Item {
-          constructor(options) {
-            options.props = options.props || {}
-            options.props.Menu = Menu // pass in Menu action store to component
-            super(options)
-          }
-        }
 
   onMount(() => Menu.subscribe((open) => (isOpen = open)))
 
-  return Menu
+  // When using Object.assign, TS only infers types at return, not for intermediary code.
+  return Object.assign(Menu, {
+    /** store for currently selected element */
+    selected,
+    ...writable(initOpen),
+    openMenu,
+    closeMenu,
+    /** Button action, expected to be used on a `<button>`-like el. Opens and closes the menu. */
+    button(el) {
+      buttonEl = el
+      buttonEl.ariaHasPopup = true
+      buttonId.set((buttonEl.id = `sashui-menubutton-${generateId()}`))
+      const MenuUnsub = Menu.subscribe((isOpen) => (buttonEl.ariaExpanded = isOpen)),
+        menuIdUnsub = menuId.subscribe((id) =>
+          id ? buttonEl.setAttribute('aria-controls', id) : buttonEl.removeAttribute('aria-controls')
+        )
+      const cleanup = addEvts(buttonEl, {
+        click(e) {
+          if (isOpen) closeMenu()
+          else {
+            e.preventDefault()
+            e.stopPropagation()
+            openMenu()
+          }
+        },
+        async keydown(e) {
+          switch (e.key) {
+            // Ref: https://www.w3.org/TR/wai-aria-practices-1.2/#keyboard-interaction-13
+            case ' ':
+            case 'Enter':
+            case 'ArrowDown':
+              await openTick()
+              Menu?.gotoItem()
+              break
+            case 'ArrowUp':
+              await openTick()
+              Menu?.gotoItem(-1)
+              break
+          }
+          function openTick() {
+            e.preventDefault()
+            e.stopPropagation()
+            return openMenu()
+          }
+        },
+        keyup(e) {
+          // Required for firefox, event.preventDefault() in handleKeyDown for the Space key doesn't cancel the handleKeyUp,
+          // which in turn triggers a *click*.
+          e.key == ' ' && e.preventDefault()
+        },
+      })
+
+      return {
+        destroy() {
+          cleanup()
+          menuIdUnsub()
+          MenuUnsub()
+          buttonId.set(null)
+        },
+      }
+    },
+    /** A renderless component for a menu item. Generally, it should be wrapped around a button. Exposes an active slot prop for whether the current item is active. */
+    Item:
+      typeof window == 'undefined'
+        ? Item // prevent SSR from tripping
+        : class MenuItem extends Item {
+            constructor(options) {
+              options.props = options.props || {}
+              options.props.Menu = Menu // pass in Menu action store to component
+              super(options)
+            }
+          },
+  })
   // === Main shared functionality
   async function openMenu() {
     Menu.set(true)
