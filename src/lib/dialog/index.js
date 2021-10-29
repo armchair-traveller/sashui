@@ -16,29 +16,30 @@ export function useDialog(initOpen = false) {
     titleId = writable()
   const close = (detail) => dialogEl.dispatchEvent(new CustomEvent('close', { detail }))
 
-  dialog.overlay = (el) => {
-    el.setAttribute('aria-hidden', true)
-    return {
-      destroy: addEvts(el, {
-        click(e) {
-          e.preventDefault()
-          if (el.getAttribute('disabled')) return
-          e.stopPropagation()
-          close('clickoutside')
+  return Object.assign(dialog, {
+    ...writable(initOpen),
+    overlay(el) {
+      el.setAttribute('aria-hidden', true)
+      return {
+        destroy: addEvts(el, {
+          click(e) {
+            e.preventDefault()
+            if (el.getAttribute('disabled')) return
+            e.stopPropagation()
+            close('clickoutside')
+          },
+        }),
+      }
+    },
+    title(el) {
+      titleId.set((el.id = 'sashui-dialog-title-' + generateId()))
+      return {
+        destroy() {
+          titleId.set(null)
         },
-      }),
-    }
-  }
-  dialog.title = (el) => {
-    titleId.set((el.id = 'sashui-dialog-title-' + generateId()))
-    return {
-      destroy() {
-        titleId.set(null)
-      },
-    }
-  }
-
-  return Object.assign(dialog, writable(initOpen))
+      }
+    },
+  })
 
   function dialog(el, /** @type {?HTMLElement} */ initialFocus) {
     dialogEl = el
