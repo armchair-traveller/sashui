@@ -15,9 +15,10 @@ Short for **S**velte **A**ction **S**tores & **H**eadless **UI**.
 ✔ Toggle  
 ✔ Dialog (Modal)
 
+- Listbox (Select) - Working on it right this moment!
+
 ### 🛣 Roadmap
 
-- Listbox (Select)
 - Popover (seems like a simple `<nav>` link menu?)
 - Radio Group (low priority in favor of `<input type="radio">`s)
 - Disclosure (low priority in favor of `<summary>`)
@@ -137,7 +138,7 @@ const dialog = useDialog(true)
 {/if}
 ```
 
-Note: Nested modals are not supported as mentioned, to avoid UX antipatterns. If it's absolutely necessary, you can get it working with some difficulty by controlling the state programatically, and it would be easier using multiple roots instead of nesting inside the modal.
+Note: Nested modals are not supported as mentioned, to avoid UX antipatterns. See [this article](https://uxplanet.org/removing-nested-modals-from-digital-products-6762351cf6de) for a list of alternatives (e.g. popovers, tabbed modals, etc). If it's absolutely necessary, you can get it working with some difficulty by controlling the state programatically, and it would be easier using multiple roots instead of nesting inside the modal.
 
 ### Toggle / Switch
 
