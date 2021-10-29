@@ -255,20 +255,10 @@ export function useMenu(initOpen = false) {
     }
 
     function nextItem() {
-      const item = itemsWalker.nextNode()
-      if (item) {
-        selected.set(item)
-        return item
-      }
-      return gotoItem()
+      return reset(itemsWalker.next())
     }
     function prevItem() {
-      const item = itemsWalker.previousNode()
-      if (item) {
-        selected.set(item)
-        return item
-      }
-      return gotoItem(-1)
+      return reset(itemsWalker.prev())
     }
 
     // ==== Helpers attached to the menuEl
@@ -277,25 +267,22 @@ export function useMenu(initOpen = false) {
       selected.set(curEl)
       return (itemsWalker.currentNode = curEl || menuEl)
     }
-    /** @param idx starts at 1 and also accepts negative indexing. */
-    function gotoItem(idx = 1) {
-      reset()
-
+    /** @param idx default first item, accepts negative indexing. */
+    function gotoItem(idx = 0) {
       if (idx < 0) {
         // negative idx, start from last item
-        itemsWalker.currentNode = itemsWalker.lastChild()
+        itemsWalker.last()
         while (idx < -1) {
           idx++
-          itemsWalker.previousNode()
+          itemsWalker.prev()
         }
       } else {
-        // idx >= 0
+        itemsWalker.first()
         while (idx > 0) {
           idx--
-          itemsWalker.nextNode()
+          itemsWalker.next()
         }
       }
-
       return reset(itemsWalker.currentNode)
     }
   }
