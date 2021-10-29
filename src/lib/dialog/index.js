@@ -55,20 +55,7 @@ export function useDialog(initOpen = false) {
     // focusWalker walks through focusables in the dialog
     const focusWalker = elWalker(dialogEl, (el) => el.matches(focusable))
 
-    function focusPrev() {
-      let node = focusWalker.previousNode()
-      if (node) return node.focus({ preventScroll: true })
-      // wrap around if no prev
-      focusWalker.currentNode = dialogEl
-      focusWalker.lastChild()?.focus({ preventScroll: true })
-    }
-    function focusNext() {
-      let node = focusWalker.nextNode()
-      if (node) return node.focus({ preventScroll: true })
-      // wrap around if no next
-      focusWalker.currentNode = dialogEl
-      focusWalker.nextNode()?.focus({ preventScroll: true })
-    }
+    const focusNext = () => focusWalker.next()?.focus({ preventScroll: true })
 
     if (initialFocus) (focusWalker.currentNode = initialFocus).focus({ preventScroll: true })
     else focusNext()
@@ -89,7 +76,7 @@ export function useDialog(initOpen = false) {
             // Handle `Tab` & `Shift+Tab` keyboard events
             case 'Tab':
               e.preventDefault()
-              if (e.shiftKey) focusPrev()
+              if (e.shiftKey) focusWalker.prev()?.focus({ preventScroll: true })
               else focusNext()
               break
           }
