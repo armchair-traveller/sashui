@@ -108,6 +108,7 @@ Note: It is possible to expose the search method if there's a use case for it! I
 
 ### Dialog (Modal)
 
+To keep the modal accessible, the portal is managed for you. This isn't the case for any other Sash components, as creating your own portal utility (should you require it) is easily doable in Svelte.
 Dialog modal state isn't managed for you. `close` events are dispatched on the element with the trigger cause in `event.detail`.
 
 `useDialog(initialOpen?: Boolean)` - returns `dialog` action store.  
