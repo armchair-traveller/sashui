@@ -164,7 +164,7 @@ export function useMenu(initOpen = false) {
     menuEl.focus({ preventScroll: true }) // a little redundant, but just in case consumer sets the menu state manually
 
     function clickOutside(e) {
-      if (menuEl.contains(e.target) || buttonEl.contains(e.target)) return
+      if (menuEl.contains(e.target) || buttonEl?.contains(e.target)) return
       closeMenu()
     }
     window.addEventListener('click', clickOutside)
