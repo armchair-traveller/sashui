@@ -54,6 +54,7 @@ export function useMenu(initOpen = false) {
 
   // When using Object.assign, TS only infers types at return, not for intermediary code.
   return Object.assign(Menu, {
+    id: menuId,
     /** store for currently selected element */
     selected,
     ...writable(initOpen),
