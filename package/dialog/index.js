@@ -16,29 +16,30 @@ export function useDialog(initOpen = false) {
     titleId = writable()
   const close = (detail) => dialogEl.dispatchEvent(new CustomEvent('close', { detail }))
 
-  dialog.overlay = (el) => {
-    el.setAttribute('aria-hidden', true)
-    return {
-      destroy: addEvts(el, {
-        click(e) {
-          e.preventDefault()
-          if (el.getAttribute('disabled')) return
-          e.stopPropagation()
-          close('clickoutside')
+  return Object.assign(dialog, {
+    ...writable(initOpen),
+    overlay(el) {
+      el.setAttribute('aria-hidden', true)
+      return {
+        destroy: addEvts(el, {
+          click(e) {
+            e.preventDefault()
+            if (el.getAttribute('disabled')) return
+            e.stopPropagation()
+            close('clickoutside')
+          },
+        }),
+      }
+    },
+    title(el) {
+      titleId.set((el.id = 'sashui-dialog-title-' + generateId()))
+      return {
+        destroy() {
+          titleId.set(null)
         },
-      }),
-    }
-  }
-  dialog.title = (el) => {
-    titleId.set((el.id = 'sashui-dialog-title-' + generateId()))
-    return {
-      destroy() {
-        titleId.set(null)
-      },
-    }
-  }
-
-  return Object.assign(dialog, writable(initOpen))
+      }
+    },
+  })
 
   function dialog(el, /** @type {?HTMLElement} */ initialFocus) {
     dialogEl = el
@@ -55,20 +56,7 @@ export function useDialog(initOpen = false) {
     // focusWalker walks through focusables in the dialog
     const focusWalker = elWalker(dialogEl, (el) => el.matches(focusable))
 
-    function focusPrev() {
-      let node = focusWalker.previousNode()
-      if (node) return node.focus({ preventScroll: true })
-      // wrap around if no prev
-      focusWalker.currentNode = dialogEl
-      focusWalker.lastChild()?.focus({ preventScroll: true })
-    }
-    function focusNext() {
-      let node = focusWalker.nextNode()
-      if (node) return node.focus({ preventScroll: true })
-      // wrap around if no next
-      focusWalker.currentNode = dialogEl
-      focusWalker.nextNode()?.focus({ preventScroll: true })
-    }
+    const focusNext = () => focusWalker.next()?.focus({ preventScroll: true })
 
     if (initialFocus) (focusWalker.currentNode = initialFocus).focus({ preventScroll: true })
     else focusNext()
@@ -89,7 +77,7 @@ export function useDialog(initOpen = false) {
             // Handle `Tab` & `Shift+Tab` keyboard events
             case 'Tab':
               e.preventDefault()
-              if (e.shiftKey) focusPrev()
+              if (e.shiftKey) focusWalker.prev()?.focus({ preventScroll: true })
               else focusNext()
               break
           }

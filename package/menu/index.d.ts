@@ -34,17 +34,9 @@ const Menu = useMenu()
 * @returns `Menu` action store, w/ additional actions, components, and helpers. If not destructured, MUST be capitalized
 * for Svelte to recognize the component(s) attached to it.
 */
-export function useMenu(): {
-    (node: any): {
-        destroy(): void;
-    };
-    selected: import("svelte/store").Writable<any>;
-    /** Subscribe to menu open state */
-    subscribe: (this: void, run: import("svelte/store").Subscriber<boolean>, invalidate?: (value?: boolean) => void) => import("svelte/store").Unsubscriber;
-    /** Set menu open state */
-    set: (this: void, value: boolean) => void;
-    /** Update menu open state */
-    update: (this: void, updater: import("svelte/store").Updater<boolean>) => void;
+export function useMenu(initOpen?: boolean): ((node: any) => {
+    destroy(): void;
+}) & {
     openMenu: () => Promise<void>;
     closeMenu: () => Promise<void>;
     /** Button action, expected to be used on a `<button>`-like el. Opens and closes the menu. */
@@ -53,5 +45,10 @@ export function useMenu(): {
     };
     /** A renderless component for a menu item. Generally, it should be wrapped around a button. Exposes an active slot prop for whether the current item is active. */
     Item: typeof Item;
+    set(this: void, value: boolean): void;
+    update(this: void, updater: import("svelte/store").Updater<boolean>): void;
+    subscribe(this: void, run: import("svelte/store").Subscriber<boolean>, invalidate?: (value?: boolean) => void): import("svelte/store").Unsubscriber;
+    /** store for currently selected element */
+    selected: import("svelte/store").Writable<any>;
 };
 import Item from "./Item.svelte";

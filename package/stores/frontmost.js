@@ -1,6 +1,6 @@
 // ? This was created to deal with nested modals, however a nested modal is a UX antipattern.
 // ? Current implementation of modals will not include nesting support (though I'm sure it'd still be possible for a consumer to do it, albeit with some difficulty)
-import { derived, writable } from 'svelte/store'
+import { writable } from 'svelte/store'
 
 const openCount = writable(0)
 /** This derived store keeps track of currently active Sash component as a boolean. By using provided API, Sash
@@ -12,7 +12,7 @@ export const frontmost = {
   subscribe(cb) {
     var curN
     openCount.update((count) => (curN = ++count))
-    const unsub = derived(openCount, (count) => count == curN).subscribe(cb)
+    const unsub = openCount.subscribe((count) => cb(count == curN))
     return function unsubscriber() {
       unsub()
       openCount.update((count) => (curN = --count))

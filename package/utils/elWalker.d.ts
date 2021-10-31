@@ -7,4 +7,14 @@
 elWalker(menuEl, (el) => el.getAttribute('role') == 'menuitem' && !el.disabled)
  * ```
  */
-export function elWalker(rootEl: HTMLElement, filter: Function): TreeWalker;
+export function elWalker(rootEl: HTMLElement, filter: Function): TreeWalker & {
+    reset: () => Node;
+    /** Wraps if null
+     *  @returns {HTMLElement} */
+    next: () => HTMLElement;
+    /** Wraps if null
+     *  @returns {HTMLElement} */
+    prev: () => HTMLElement;
+    first: () => Node;
+    last: () => Node;
+};

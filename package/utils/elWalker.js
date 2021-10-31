@@ -8,7 +8,7 @@ elWalker(menuEl, (el) => el.getAttribute('role') == 'menuitem' && !el.disabled)
  * ```
  */
 export function elWalker(rootEl, filter) {
-  return document.createTreeWalker(
+  const walker = document.createTreeWalker(
     rootEl,
     NodeFilter.SHOW_ELEMENT,
     {
@@ -16,4 +16,15 @@ export function elWalker(rootEl, filter) {
     },
     false
   )
+  return Object.assign(walker, {
+    reset: () => (walker.currentNode = walker.root),
+    /** Wraps if null
+     *  @returns {HTMLElement} */
+    next: () => walker.nextNode() || walker.first(),
+    /** Wraps if null
+     *  @returns {HTMLElement} */
+    prev: () => walker.previousNode() || walker.last(),
+    first: () => walker.reset() && walker.nextNode(),
+    last: () => walker.reset() && walker.lastChild(),
+  })
 }
