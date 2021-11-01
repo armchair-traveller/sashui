@@ -144,7 +144,7 @@ export function useMenu(initOpen = false) {
    *
    * * Theoretically, actions make it easy to incorporate options via params. No options are obvious at the moment, so none are present. And custom stores/methods can be used to easily manage that, too.
    */
-  function Menu(node) {
+  function Menu(node, { autofocus = true }) {
     menuEl = node
     // Attach helpers to Menu, which is on menu el as if it's a context, used for programmatic purposes e.g. `Item.svelte` & button handlers, consumer API
     // These helpers are always available once set, but should only be run if the menu element is on the DOM! (They don't do any checks)
@@ -162,7 +162,7 @@ export function useMenu(initOpen = false) {
         id ? menuEl.setAttribute('aria-labelledby', id) : menuEl.removeAttribute('aria-labelledby')
       )
 
-    menuEl.focus({ preventScroll: true }) // a little redundant, but just in case consumer sets the menu state manually
+    autofocus && menuEl.focus({ preventScroll: true }) // a little redundant, but just in case consumer sets the menu state manually
 
     function clickOutside(e) {
       if (menuEl.contains(e.target) || buttonEl?.contains(e.target)) return
