@@ -34,7 +34,9 @@ const Menu = useMenu()
 * @returns `Menu` action store, w/ additional actions, components, and helpers. If not destructured, MUST be capitalized
 * for Svelte to recognize the component(s) attached to it.
 */
-export function useMenu(initOpen?: boolean): ((node: any) => {
+export function useMenu(initOpen?: boolean): ((node: any, { autofocus }: {
+    autofocus?: boolean;
+}) => {
     destroy(): void;
 }) & {
     openMenu: () => Promise<void>;
@@ -48,6 +50,7 @@ export function useMenu(initOpen?: boolean): ((node: any) => {
     set(this: void, value: boolean): void;
     update(this: void, updater: import("svelte/store").Updater<boolean>): void;
     subscribe(this: void, run: import("svelte/store").Subscriber<boolean>, invalidate?: (value?: boolean) => void): import("svelte/store").Unsubscriber;
+    menuId: import("svelte/store").Writable<any>;
     /** store for currently selected element */
     selected: import("svelte/store").Writable<any>;
 };
