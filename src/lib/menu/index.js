@@ -50,7 +50,7 @@ export function useMenu(initOpen = false) {
     menuId = writable(null),
     buttonId = writable(null)
 
-  onMount(() => Menu.subscribe((open) => (isOpen = open)))
+  onMount(() => Menu.subscribe((openState) => (isOpen = openState)))
 
   // When using Object.assign, TS only infers types at return, not for intermediary code.
   return Object.assign(Menu, {
@@ -58,8 +58,8 @@ export function useMenu(initOpen = false) {
     /** store for currently selected element */
     selected,
     ...writable(initOpen),
-    openMenu,
-    closeMenu,
+    open,
+    close,
     /** Button action, expected to be used on a `<button>`-like el. Opens and closes the menu. */
     button(el) {
       buttonEl = el
@@ -71,11 +71,11 @@ export function useMenu(initOpen = false) {
         )
       const cleanup = addEvts(buttonEl, {
         click(e) {
-          if (isOpen) closeMenu()
+          if (isOpen) close()
           else {
             e.preventDefault()
             e.stopPropagation()
-            openMenu()
+            open()
           }
         },
         async keydown(e) {
@@ -95,7 +95,7 @@ export function useMenu(initOpen = false) {
           function openTick() {
             e.preventDefault()
             e.stopPropagation()
-            return openMenu()
+            return open()
           }
         },
         keyup(e) {
@@ -127,12 +127,12 @@ export function useMenu(initOpen = false) {
           },
   })
   // === Main shared functionality
-  async function openMenu() {
+  async function open() {
     Menu.set(true)
     await tick()
     menuEl?.focus({ preventScroll: true })
   }
-  async function closeMenu() {
+  async function close() {
     Menu.set(false)
     await tick()
     buttonEl?.focus({ preventScroll: true })
@@ -166,7 +166,7 @@ export function useMenu(initOpen = false) {
 
     function clickOutside(e) {
       if (menuEl.contains(e.target) || buttonEl?.contains(e.target)) return
-      closeMenu()
+      close()
     }
     window.addEventListener('click', clickOutside)
 
@@ -190,7 +190,7 @@ export function useMenu(initOpen = false) {
           case 'Enter':
             keyModifier()
             get(selected)?.click()
-            closeMenu()
+            close()
             break
 
           case 'ArrowDown':
@@ -213,7 +213,7 @@ export function useMenu(initOpen = false) {
 
           case 'Escape':
             keyModifier()
-            closeMenu()
+            close()
             break
 
           // Nullify tab for focus trapping purposes

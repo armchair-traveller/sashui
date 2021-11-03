@@ -29,7 +29,7 @@ function setup() {
       Menu.reset(el)
     },
     click() {
-      Menu.closeMenu()
+      Menu.close()
     },
     pointermove: handleMove,
     mousemove: handleMove,
