@@ -7,8 +7,7 @@ import { generateId } from '../stores/createId'
 export let Menu
 let el,
   active = false,
-  cleanup = null,
-  id = generateId()
+  cleanup = null
 $: if (el) setup()
 function setup() {
   cleanup?.()
@@ -16,7 +15,7 @@ function setup() {
 
   el.setAttribute('role', 'menuitem')
   el.setAttribute('tabindex', -1)
-  el.id = `sashui-menuitem-${id}`
+  el.id = generateId('menuitem')
 
   function handleMove() {
     if (!active) Menu.reset(el)

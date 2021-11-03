@@ -1,7 +1,7 @@
 import { writable } from 'svelte/store'
 
 let id = 0
-export const generateId = () => ++id
+export const generateId = (name) => `sashui-${name}-${++id}`
 
 export function createId(init) {
   const { set, subscribe, update } = writable(init)
@@ -9,7 +9,7 @@ export function createId(init) {
   return {
     /** resets state if falsey/no value passed in */
     set(el, name) {
-      const uiId = name ? `sashui-${name}-${generateId()}` : name
+      const uiId = name ? generateId(name) : name
       if (el) el.id = uiId
       set(uiId)
     },
