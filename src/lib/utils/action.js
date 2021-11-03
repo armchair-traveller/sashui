@@ -1,3 +1,5 @@
+// This file is for utils specific to actions, like reducing commonly used DOM code.
+
 /**
  * Util for adding / removing multiple evts at once to an element
  * @param {HTMLElement} el

@@ -3,7 +3,7 @@ import { onDestroy } from 'svelte'
 
 import SlotEl from '../SlotEl.svelte'
 import { addEvts } from '../utils/action'
-import { generateId } from '../utils/generateId'
+import { generateId } from '../stores/createId'
 export let Menu
 let el,
   active = false,
