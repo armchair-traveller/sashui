@@ -95,12 +95,12 @@ const Menu = useMenu()
 
 Menu also has some programmatic helpers you can invoke (that're used internally):
 
-- `Menu.selected`: A writable store with the current selected menuitem element. You can also set the selected menuitem programatically, which will enable `active` on it, or set it to `null` for no selection. (Note: This doesn't reset the currently selected tree walker, so it's better to use `Menu.reset()` if setting menuitem. This is more for reading current selections and reacting to them via subscription.)
-- `Menu.openMenu()`: Opens the menu and focuses it
+- `Menu.selected`: A writable store with the current selected menuitem element. You can also set the selected menuitem programatically, which will enable `active` on it, or set it to `null` for no selection. (Note: This doesn't reset the currently selected tree walker, so it's better to use `Menu.reset()` if setting menuitem. This is more for reading current selections and reacting to them via subscription, you can progrogramatically select and `.click()` items.)
+- `Menu.open()`: Opens the menu and focuses it
 - While menu is on the DOM (open), you can use these menu helpers (they don't make any checks for open state so you'll have to guard it yourself if needed):
   - `Menu.reset(el?: HTMLElement)` resets the selected el, or if an el is passed in changes currently selected to it.
   - `Menu.gotoItem(idx?: number)` sets current selected item to the item index passed in, accepts negative indexing. By default uses first item. Wraps if null.
-  - `Menu.closeMenu()` closes the menu and focuses the menu button afterwards, which is the default behavior of most events causing the menu to close.
+  - `Menu.close()` closes the menu and focuses the menu button afterwards, which is the default behavior of most events causing the menu to close.
   - `Menu.nextItem()` Select next item
   - `Menu.prevItem()` Select previous item
 

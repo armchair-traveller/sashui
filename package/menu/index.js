@@ -2,7 +2,7 @@ import { onMount, tick } from 'svelte'
 import { get, writable } from 'svelte/store'
 import { addEvts } from '../utils/action'
 import { elWalker } from '../utils/elWalker'
-import { generateId } from '../utils/generateId'
+import { createId } from '../stores/createId'
 import Item from './Item.svelte'
 
 /**
@@ -45,12 +45,10 @@ const Menu = useMenu()
 export function useMenu(initOpen = false) {
   var buttonEl,
     menuEl,
-    isOpen = false
+    isListboxMounted = initOpen
   const selected = writable(null),
-    menuId = writable(null),
-    buttonId = writable(null)
-
-  onMount(() => Menu.subscribe((open) => (isOpen = open)))
+    menuId = createId(),
+    buttonId = createId()
 
   // When using Object.assign, TS only infers types at return, not for intermediary code.
   return Object.assign(Menu, {
@@ -58,24 +56,22 @@ export function useMenu(initOpen = false) {
     /** store for currently selected element */
     selected,
     ...writable(initOpen),
-    openMenu,
-    closeMenu,
+    open,
+    close,
     /** Button action, expected to be used on a `<button>`-like el. Opens and closes the menu. */
     button(el) {
       buttonEl = el
       buttonEl.ariaHasPopup = true
-      buttonId.set((buttonEl.id = `sashui-menubutton-${generateId()}`))
+      buttonId.set(buttonEl, 'menubutton')
       const MenuUnsub = Menu.subscribe((isOpen) => (buttonEl.ariaExpanded = isOpen)),
-        menuIdUnsub = menuId.subscribe((id) =>
-          id ? buttonEl.setAttribute('aria-controls', id) : buttonEl.removeAttribute('aria-controls')
-        )
+        menuIdUnsub = menuId(buttonEl, 'aria-controls')
       const cleanup = addEvts(buttonEl, {
         click(e) {
-          if (isOpen) closeMenu()
+          if (isListboxMounted) close()
           else {
             e.preventDefault()
             e.stopPropagation()
-            openMenu()
+            open()
           }
         },
         async keydown(e) {
@@ -95,7 +91,7 @@ export function useMenu(initOpen = false) {
           function openTick() {
             e.preventDefault()
             e.stopPropagation()
-            return openMenu()
+            return open()
           }
         },
         keyup(e) {
@@ -127,12 +123,12 @@ export function useMenu(initOpen = false) {
           },
   })
   // === Main shared functionality
-  async function openMenu() {
+  async function open() {
     Menu.set(true)
     await tick()
     menuEl?.focus({ preventScroll: true })
   }
-  async function closeMenu() {
+  async function close() {
     Menu.set(false)
     await tick()
     buttonEl?.focus({ preventScroll: true })
@@ -144,29 +140,28 @@ export function useMenu(initOpen = false) {
    *
    * * Theoretically, actions make it easy to incorporate options via params. No options are obvious at the moment, so none are present. And custom stores/methods can be used to easily manage that, too.
    */
-  function Menu(node, { autofocus = true }) {
+  function Menu(node, { autofocus = true } = {}) {
     menuEl = node
+    isListboxMounted = true
     // Attach helpers to Menu, which is on menu el as if it's a context, used for programmatic purposes e.g. `Item.svelte` & button handlers, consumer API
     // These helpers are always available once set, but should only be run if the menu element is on the DOM! (They don't do any checks)
     menuEl.Menu = Object.assign(Menu, { reset, gotoItem, nextItem, prevItem, search })
 
     const itemsWalker = elWalker(menuEl, (el) => el.getAttribute('role') == 'menuitem' && !el.disabled)
 
-    menuId.set((menuEl.id = `sashui-menu-${generateId()}`))
+    menuId.set(menuEl, 'menu')
     menuEl.setAttribute('role', 'menu')
     menuEl.setAttribute('tabindex', 0)
     const selectedUnsub = selected.subscribe((el) =>
         el?.id ? menuEl.setAttribute('aria-activedescendant', el.id) : menuEl.removeAttribute('aria-activedescendant')
       ),
-      buttonIdUnsub = buttonId.subscribe((id) =>
-        id ? menuEl.setAttribute('aria-labelledby', id) : menuEl.removeAttribute('aria-labelledby')
-      )
+      buttonIdUnsub = buttonId(menuEl, 'aria-labelledby')
 
     autofocus && menuEl.focus({ preventScroll: true }) // a little redundant, but just in case consumer sets the menu state manually
 
     function clickOutside(e) {
       if (menuEl.contains(e.target) || buttonEl?.contains(e.target)) return
-      closeMenu()
+      close()
     }
     window.addEventListener('click', clickOutside)
 
@@ -190,7 +185,7 @@ export function useMenu(initOpen = false) {
           case 'Enter':
             keyModifier()
             get(selected)?.click()
-            closeMenu()
+            close()
             break
 
           case 'ArrowDown':
@@ -213,7 +208,7 @@ export function useMenu(initOpen = false) {
 
           case 'Escape':
             keyModifier()
-            closeMenu()
+            close()
             break
 
           // Nullify tab for focus trapping purposes
@@ -234,11 +229,12 @@ export function useMenu(initOpen = false) {
     })
     return {
       destroy() {
+        isListboxMounted = false
         window.removeEventListener('click', clickOutside)
         rmEvts()
         selectedUnsub()
         buttonIdUnsub()
-        menuId.set(null)
+        menuId.set()
       },
     }
 

@@ -4,7 +4,7 @@
 // There is no internal open state. Whether to show or hide is handled by the consumer. If it renders, we assume it's open.
 import { addEvts } from '../utils/action'
 import { elWalker } from '../utils/elWalker'
-import { generateId } from '../utils/generateId'
+import { createId } from '../stores/createId'
 import { writable } from 'svelte/store'
 import { inertOthers } from './inertOthers'
 
@@ -13,7 +13,7 @@ const focusable =
 /** `aria-describedby` not implemented. To the consumer it's literally one attribute, and thus' not worth an action for. */
 export function useDialog(initOpen = false) {
   let dialogEl,
-    titleId = writable()
+    titleId = createId()
   const close = (detail) => dialogEl.dispatchEvent(new CustomEvent('close', { detail }))
 
   return Object.assign(dialog, {
@@ -32,10 +32,10 @@ export function useDialog(initOpen = false) {
       }
     },
     title(el) {
-      titleId.set((el.id = 'sashui-dialog-title-' + generateId()))
+      titleId.set(el, 'dialog-title')
       return {
         destroy() {
-          titleId.set(null)
+          titleId.set()
         },
       }
     },
@@ -46,9 +46,7 @@ export function useDialog(initOpen = false) {
     // move the dialog to the body via a portal
     document.body.append(dialogEl)
     const restoreEl = document.activeElement,
-      titleUnsub = titleId.subscribe((id) =>
-        id ? dialogEl.setAttribute('aria-labelledby', id) : dialogEl.removeAttribute('aria-labelledby')
-      ),
+      titleUnsub = titleId(dialogEl, 'aria-labelledby'),
       inertCleanup = inertOthers(dialogEl)
     dialogEl.setAttribute('role', 'dialog')
     dialogEl.ariaModal = true

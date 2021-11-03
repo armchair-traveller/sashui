@@ -34,13 +34,13 @@ const Menu = useMenu()
 * @returns `Menu` action store, w/ additional actions, components, and helpers. If not destructured, MUST be capitalized
 * for Svelte to recognize the component(s) attached to it.
 */
-export function useMenu(initOpen?: boolean): ((node: any, { autofocus }: {
+export function useMenu(initOpen?: boolean): ((node: any, { autofocus }?: {
     autofocus?: boolean;
 }) => {
     destroy(): void;
 }) & {
-    openMenu: () => Promise<void>;
-    closeMenu: () => Promise<void>;
+    open: () => Promise<void>;
+    close: () => Promise<void>;
     /** Button action, expected to be used on a `<button>`-like el. Opens and closes the menu. */
     button(el: any): {
         destroy(): void;
@@ -50,7 +50,11 @@ export function useMenu(initOpen?: boolean): ((node: any, { autofocus }: {
     set(this: void, value: boolean): void;
     update(this: void, updater: import("svelte/store").Updater<boolean>): void;
     subscribe(this: void, run: import("svelte/store").Subscriber<boolean>, invalidate?: (value?: boolean) => void): import("svelte/store").Unsubscriber;
-    menuId: import("svelte/store").Writable<any>;
+    menuId: ((el: any, attr: any) => import("svelte/store").Unsubscriber) & {
+        set(el: any, name: any): void;
+        update: (this: void, updater: import("svelte/store").Updater<any>) => void;
+        subscribe: (this: void, run: import("svelte/store").Subscriber<any>, invalidate?: (value?: any) => void) => import("svelte/store").Unsubscriber;
+    };
     /** store for currently selected element */
     selected: import("svelte/store").Writable<any>;
 };
