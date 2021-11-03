@@ -2,7 +2,7 @@ import { onMount, tick } from 'svelte'
 import { get, writable } from 'svelte/store'
 import { addEvts } from '../utils/action'
 import { elWalker } from '../utils/elWalker'
-import { generateId } from '../utils/generateId'
+import { createId } from '../stores/createId'
 import Item from './Item.svelte'
 
 /**
@@ -47,8 +47,8 @@ export function useMenu(initOpen = false) {
     menuEl,
     isListboxMounted = initOpen
   const selected = writable(null),
-    menuId = writable(null),
-    buttonId = writable(null)
+    menuId = createId(),
+    buttonId = createId()
 
   // When using Object.assign, TS only infers types at return, not for intermediary code.
   return Object.assign(Menu, {
@@ -62,11 +62,9 @@ export function useMenu(initOpen = false) {
     button(el) {
       buttonEl = el
       buttonEl.ariaHasPopup = true
-      buttonId.set((buttonEl.id = `sashui-menubutton-${generateId()}`))
+      buttonId.set(buttonEl, 'menubutton')
       const MenuUnsub = Menu.subscribe((isOpen) => (buttonEl.ariaExpanded = isOpen)),
-        menuIdUnsub = menuId.subscribe((id) =>
-          id ? buttonEl.setAttribute('aria-controls', id) : buttonEl.removeAttribute('aria-controls')
-        )
+        menuIdUnsub = menuId.subscribe(buttonEl, 'aria-controls')
       const cleanup = addEvts(buttonEl, {
         click(e) {
           if (isListboxMounted) close()
@@ -142,7 +140,7 @@ export function useMenu(initOpen = false) {
    *
    * * Theoretically, actions make it easy to incorporate options via params. No options are obvious at the moment, so none are present. And custom stores/methods can be used to easily manage that, too.
    */
-  function Menu(node, { autofocus = true }) {
+  function Menu(node, { autofocus = true } = {}) {
     menuEl = node
     isListboxMounted = true
     // Attach helpers to Menu, which is on menu el as if it's a context, used for programmatic purposes e.g. `Item.svelte` & button handlers, consumer API
@@ -151,15 +149,13 @@ export function useMenu(initOpen = false) {
 
     const itemsWalker = elWalker(menuEl, (el) => el.getAttribute('role') == 'menuitem' && !el.disabled)
 
-    menuId.set((menuEl.id = `sashui-menu-${generateId()}`))
+    menuId.set(menuEl, 'menu')
     menuEl.setAttribute('role', 'menu')
     menuEl.setAttribute('tabindex', 0)
     const selectedUnsub = selected.subscribe((el) =>
         el?.id ? menuEl.setAttribute('aria-activedescendant', el.id) : menuEl.removeAttribute('aria-activedescendant')
       ),
-      buttonIdUnsub = buttonId.subscribe((id) =>
-        id ? menuEl.setAttribute('aria-labelledby', id) : menuEl.removeAttribute('aria-labelledby')
-      )
+      buttonIdUnsub = buttonId.subscribe(menuEl, 'aria-labelledby')
 
     autofocus && menuEl.focus({ preventScroll: true }) // a little redundant, but just in case consumer sets the menu state manually
 
@@ -238,7 +234,7 @@ export function useMenu(initOpen = false) {
         rmEvts()
         selectedUnsub()
         buttonIdUnsub()
-        menuId.set(null)
+        menuId.set()
       },
     }
 
