@@ -45,7 +45,7 @@ const Menu = useMenu()
 export function useMenu(initOpen = false) {
   var buttonEl,
     menuEl,
-    isOpen = false
+    isOpen = initOpen
   const selected = writable(null),
     menuId = writable(null),
     buttonId = writable(null)
