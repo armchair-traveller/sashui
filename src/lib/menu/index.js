@@ -45,12 +45,10 @@ const Menu = useMenu()
 export function useMenu(initOpen = false) {
   var buttonEl,
     menuEl,
-    isOpen = initOpen
+    isListboxMounted = initOpen
   const selected = writable(null),
     menuId = writable(null),
     buttonId = writable(null)
-
-  onMount(() => Menu.subscribe((openState) => (isOpen = openState)))
 
   // When using Object.assign, TS only infers types at return, not for intermediary code.
   return Object.assign(Menu, {
@@ -71,7 +69,7 @@ export function useMenu(initOpen = false) {
         )
       const cleanup = addEvts(buttonEl, {
         click(e) {
-          if (isOpen) close()
+          if (isListboxMounted) close()
           else {
             e.preventDefault()
             e.stopPropagation()
@@ -146,6 +144,7 @@ export function useMenu(initOpen = false) {
    */
   function Menu(node, { autofocus = true }) {
     menuEl = node
+    isListboxMounted = true
     // Attach helpers to Menu, which is on menu el as if it's a context, used for programmatic purposes e.g. `Item.svelte` & button handlers, consumer API
     // These helpers are always available once set, but should only be run if the menu element is on the DOM! (They don't do any checks)
     menuEl.Menu = Object.assign(Menu, { reset, gotoItem, nextItem, prevItem, search })
@@ -234,6 +233,7 @@ export function useMenu(initOpen = false) {
     })
     return {
       destroy() {
+        isListboxMounted = false
         window.removeEventListener('click', clickOutside)
         rmEvts()
         selectedUnsub()
