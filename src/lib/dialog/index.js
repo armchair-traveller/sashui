@@ -46,7 +46,7 @@ export function useDialog(initOpen = false) {
     // move the dialog to the body via a portal
     document.body.append(dialogEl)
     const restoreEl = document.activeElement,
-      titleUnsub = titleId.subscribe(dialogEl, 'aria-labelledby'),
+      titleUnsub = titleId(dialogEl, 'aria-labelledby'),
       inertCleanup = inertOthers(dialogEl)
     dialogEl.setAttribute('role', 'dialog')
     dialogEl.ariaModal = true

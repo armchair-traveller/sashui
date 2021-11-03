@@ -64,7 +64,7 @@ export function useMenu(initOpen = false) {
       buttonEl.ariaHasPopup = true
       buttonId.set(buttonEl, 'menubutton')
       const MenuUnsub = Menu.subscribe((isOpen) => (buttonEl.ariaExpanded = isOpen)),
-        menuIdUnsub = menuId.subscribe(buttonEl, 'aria-controls')
+        menuIdUnsub = menuId(buttonEl, 'aria-controls')
       const cleanup = addEvts(buttonEl, {
         click(e) {
           if (isListboxMounted) close()
@@ -155,7 +155,7 @@ export function useMenu(initOpen = false) {
     const selectedUnsub = selected.subscribe((el) =>
         el?.id ? menuEl.setAttribute('aria-activedescendant', el.id) : menuEl.removeAttribute('aria-activedescendant')
       ),
-      buttonIdUnsub = buttonId.subscribe(menuEl, 'aria-labelledby')
+      buttonIdUnsub = buttonId(menuEl, 'aria-labelledby')
 
     autofocus && menuEl.focus({ preventScroll: true }) // a little redundant, but just in case consumer sets the menu state manually
 
