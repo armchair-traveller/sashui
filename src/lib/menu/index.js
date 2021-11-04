@@ -81,11 +81,11 @@ export function useMenu(initOpen = false) {
             case 'Enter':
             case 'ArrowDown':
               await openTick()
-              Menu?.gotoItem()
+              Menu.gotoItem?.()
               break
             case 'ArrowUp':
               await openTick()
-              Menu?.gotoItem(-1)
+              Menu.gotoItem?.(-1)
               break
           }
           function openTick() {
