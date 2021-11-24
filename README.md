@@ -8,6 +8,8 @@ Short for **S**velte **A**ction **S**tores & **H**eadless **UI**.
 
 **Installation**: simply run `npm i -D sashui`
 
+[Play with the API in an online IDE](https://stackblitz.com/edit/sashui)
+
 ## Status
 
 ✔ Menu  

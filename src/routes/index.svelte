@@ -1,8 +1,9 @@
 <h1>Welcome to sashui</h1>
 
-<h2>See demos in action below (and browse their route code to see the API or check out the docs)</h2>
+<h2>See links to demos below.</h2>
+<p>Browse `src/routes` to see the code, go ahead and play with it! For more info, visit the docs on our README.</p>
 
-<ul>
-  <a href="/menu" sveltekit:prefetch>Menu</a>
-  <a href="/dialog" sveltekit:prefetch>Dialog</a>
+<ul class="text-blue-800">
+  <a href="/menu" sveltekit:prefetch><li>Menu</li></a>
+  <a href="/dialog" sveltekit:prefetch><li>Dialog</li></a>
 </ul>
