@@ -97,7 +97,7 @@ const Menu = useMenu()
 
 **API**
 
-`useMenu(initOpen?: Boolean)` initial open state. Default `false`.
+`useMenu(initOpen?: Boolean)` initial open state. Default `false`. Returns `Menu` action store.
 
 `use:Menu={{ autofocus?: Boolean }}` autofocus on menu open. Default `true`.
 
@@ -121,9 +121,9 @@ Note: It is possible to expose the search method if there's a use case for it! I
 To keep the modal accessible, the portal is managed for you. This isn't the case for any other Sash components, as creating your own portal utility (should you require it) is easily doable in Svelte.
 Dialog modal state isn't managed for you. `close` events are dispatched on the element with the trigger cause in `event.detail`.
 
-`useDialog(initialOpen?: Boolean)` - returns `dialog` action store.  
-`$dialog` - Boolean representing dialog open state. Default `false`. Set it to open/close the modal.  
-`use:dialog={initialFocus?: HTMLElement}` - if an initial focus is set, must be a valid focusable element within the modal.
+`useDialog(initOpen?: Boolean)` initial open state. Default `false`. Returns `dialog` action store.  
+`$dialog` Boolean representing dialog open state. Default `false`. Set it to open/close the modal.  
+`use:dialog={{ initialFocus?: HTMLElement }}` if an initial focus is set, must be a valid focusable element within the modal.
 
 ```svelte
 <script>
