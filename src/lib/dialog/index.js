@@ -26,7 +26,7 @@ export function useDialog(initOpen = false) {
             e.preventDefault()
             if (el.getAttribute('disabled')) return
             e.stopPropagation()
-            close('clickoutside')
+            close('overlay')
           },
         }),
       }
