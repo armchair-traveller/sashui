@@ -74,6 +74,8 @@ Other general implementation differences:
 
 ### Menu
 
+**Simple Example**
+
 ```svelte
 <script>
 import { useMenu } from 'sashui'
@@ -91,7 +93,13 @@ const Menu = useMenu()
 {/if}
 ```
 
-`$Menu` makes use of Svelte's auto-subscription syntax. Defaults to `false`. You can also use it to open and close the menu programatically (e.g. `$Menu = false`), though closing events are already automatically managed by the menu.
+**API**
+
+`useMenu(initOpen?: Boolean)` initial open state. Default `false`.
+
+`use:Menu={{ autofocus?: Boolean }}` autofocus on menu open. Default `true`.
+
+`$Menu` makes use of Svelte's auto-subscription syntax. Default `false`. You can also use it to open and close the menu programatically (e.g. `$Menu = false`), though closing events are already automatically managed by the menu.
 
 Menu also has some programmatic helpers you can invoke (that're used internally):
 
