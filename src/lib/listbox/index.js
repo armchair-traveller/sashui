@@ -5,7 +5,7 @@ import { tick } from 'svelte'
 import { writable } from 'svelte/store'
 
 export function useListbox(initOpen = false) {
-  let isOpen = initOpen,
+  let isMounted = initOpen,
     buttonEl,
     listboxEl
   const orientation = writable(),
@@ -14,7 +14,7 @@ export function useListbox(initOpen = false) {
     listboxId = createId()
 
   return Object.assign(Listbox, {
-    ...writable(isOpen),
+    ...writable(isMounted),
     selected,
     /** default tag: `<button>`
      * other viable tags: input,a
@@ -67,7 +67,7 @@ export function useListbox(initOpen = false) {
         },
         click(e) {
           // we don't attach event handlers to [disabled] anyway, because they're filtered by tree walker if (isDisabledReactIssue7711(event.currentTarget)) return event.preventDefault()
-          if (isOpen) {
+          if (isMounted) {
             close()
             // TODO
             d.nextFrame(() => {
@@ -105,8 +105,14 @@ export function useListbox(initOpen = false) {
   /** default tag: `<ul>` */
   function Listbox(node, { autofocus = true } = {}) {
     listboxEl = node // AKA container
+    isMounted = true
+    // Attach helpers to Menu, which is on menu el as if it's a context, used for programmatic purposes e.g. `Item.svelte` & button handlers, consumer API
+    // These helpers are always available once set, but should only be run if the menu element is on the DOM! (They don't do any checks)
+    listboxEl.Listbox = Object.assign(Listbox, { reset, gotoItem, nextItem, prevItem, search })
     // ?TODO sashuiui-listbox-options-id
     // ? labelledby is either by the label, or if doesn't exist, then the button
+
+    const itemsWalker = elWalker(listboxEl, (el) => el.getAttribute('role') == 'option' && !el.ariaDisabled)
 
     // aria-activedescendant = selected.id
     // aria-orientation =
@@ -122,8 +128,61 @@ export function useListbox(initOpen = false) {
     return {
       destroy() {},
     }
+
+    /** Search by str, clears timeout but doesn't set it on invoke.
+     * @param {number} timeout - if not set, won't clear timeout. Resets timeout if invoked again before clear
+     */
+    function search(char = '', timeout = null) {
+      clearTimeout(cancelClearSearch)
+      searchQuery += char.toLowerCase()
+      const matchedEl = Array.prototype.find.call(listboxEl.querySelectorAll('[role=option]:not([disabled])'), (el) =>
+        el.textContent.trim().toLowerCase().startsWith(searchQuery)
+      )
+      if (matchedEl) reset(matchedEl)
+      if (typeof timeout == 'number') cancelClearSearch = setTimeout(() => (searchQuery = ''), timeout)
+    }
+
+    function nextItem() {
+      return reset(itemsWalker.next())
+    }
+    function prevItem() {
+      return reset(itemsWalker.prev())
+    }
+
+    // ==== Helpers attached to the listboxEl
+    /** resets currently selected menuitem, or sets it to the el passed in */
+    function reset(curEl = null) {
+      selected.set(curEl)
+      return (itemsWalker.currentNode = curEl || listboxEl)
+    }
+    /** @param idx default first item, accepts negative indexing. */
+    function gotoItem(idx = 0) {
+      if (idx < 0) {
+        // negative idx, start from last item
+        itemsWalker.last()
+        while (idx < -1) {
+          idx++
+          itemsWalker.prev()
+        }
+      } else {
+        itemsWalker.first()
+        while (idx > 0) {
+          idx--
+          itemsWalker.next()
+        }
+      }
+      return reset(itemsWalker.currentNode)
+    }
   }
   /** helpers */
-  async function open() {}
-  async function close() {}
+  async function open() {
+    Listbox.set(true)
+    await tick()
+    listboxEl?.focus({ preventScroll: true })
+  }
+  async function close() {
+    Listbox.set(false)
+    await tick()
+    buttonEl?.focus({ preventScroll: true })
+  }
 }
