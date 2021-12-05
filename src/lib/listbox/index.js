@@ -1,4 +1,4 @@
-import Item from '$lib/listbox/Item.svelte'
+import Option from '$lib/listbox/Option.svelte'
 import { createId } from '$lib/stores/createId'
 import { addEvts } from '$lib/utils/action'
 import { tick } from 'svelte'
@@ -21,80 +21,63 @@ export function useListbox(initOpen = false) {
      */
     button(node) {
       buttonEl = node
-      // ?TODO id
+      buttonEl.ariaHasPopup = true
+      buttonId.set(buttonEl, 'listboxbutton')
       // ! unnecessary ?TODO aria-labelledby id of label el
-      // TODO
-      // ;({
-      //   'aria-haspopup': true,
-      //   'aria-controls': (_a = state.optionsRef.current) === null || _a === void 0 ? void 0 : _a.id,
-      //   'aria-expanded': state.disabled ? undefined : state.listboxState === ListboxStates.Open,
-      // })
-      const rmvEvts = addEvts({
-        async keydown(e) {
-          switch (e.key) {
-            // Ref: https://www.w3.org/TR/wai-aria-practices-1.2/#keyboard-interaction-13
-            case 'Space':
-            case 'Enter':
-            case 'ArrowDown':
-              e.preventDefault()
-              open()
-              await tick()
-              // TODO
-              d.nextFrame(() => {
-                if (!state.propsRef.current.value) dispatch({ type: ActionTypes.GoToOption, focus: Focus.First })
-              })
-              break
-            case 'ArrowUp':
-              e.preventDefault()
-              open()
-              await tick()
-              // TODO
-              d.nextFrame(() => {
-                if (!state.propsRef.current.value) dispatch({ type: ActionTypes.GoToOption, focus: Focus.Last })
-              })
-              break
-          }
-        },
-        keyup(e) {
-          switch (e.key) {
-            case Keys.Space:
-              // Required for firefox, e.preventDefault() in handleKeyDown for
-              // the Space key doesn't cancel the handleKeyUp, which in turn
-              // triggers a *click*.
-              e.preventDefault()
-              break
-          }
-        },
+      const ListboxUnsub = Listbox.subscribe((isOpen) => (buttonEl.ariaExpanded = isOpen)),
+        listboxIdUnsub = listboxId(buttonEl, 'aria-controls')
+      const cleanup = addEvts(buttonEl, {
         click(e) {
-          // we don't attach event handlers to [disabled] anyway, because they're filtered by tree walker if (isDisabledReactIssue7711(event.currentTarget)) return event.preventDefault()
-          if (isMounted) {
-            close()
-            // TODO
-            d.nextFrame(() => {
-              var _a
-              return (_a = state.buttonRef.current) === null || _a === void 0
-                ? void 0
-                : _a.focus({ preventScroll: true })
-            })
-          } else {
+          if (isMounted) close()
+          else {
             e.preventDefault()
+            e.stopPropagation()
             open()
           }
         },
+        async keydown(e) {
+          switch (e.key) {
+            // Ref: https://www.w3.org/TR/wai-aria-practices-1.2/#keyboard-interaction-13
+            case ' ':
+            case 'Enter':
+            case 'ArrowDown':
+              await openTick()
+              Listbox.gotoItem?.()
+              break
+            case 'ArrowUp':
+              await openTick()
+              Listbox.gotoItem?.(-1)
+              break
+          }
+          function openTick() {
+            e.preventDefault()
+            e.stopPropagation()
+            return open()
+          }
+        },
+        keyup(e) {
+          // Required for firefox, event.preventDefault() in handleKeyDown for the Space key doesn't cancel the handleKeyUp,
+          // which in turn triggers a *click*.
+          e.key == ' ' && e.preventDefault()
+        },
       })
+
       return {
         destroy() {
-          rmvEvts()
+          cleanup()
+          listboxIdUnsub()
+          ListboxUnsub()
+          buttonId.set(null)
         },
       }
     },
     // ! Seems like label is unnecessary.
     // ?TODO skipping this unless it's needed, remove later if not label(){}
-    /** A renderless component for a menu item. default child: `<li>`. Exposes an active slot prop for whether the current item is active. */
-    Item:
+    /** A renderless component for an option. default child: `<li>`. Exposes an active slot prop for whether the current item is active. */
+    Option:
       typeof window == 'undefined'
-        ? Item // prevent SSR from tripping
-        : class MenuItem extends Item {
+        ? Option // prevent SSR from tripping
+        : class ListboxOption extends Option {
             constructor(options) {
               options.props = options.props || {}
               options.props.Listbox = Listbox // pass in Listbox action store to component
@@ -106,8 +89,8 @@ export function useListbox(initOpen = false) {
   function Listbox(node, { autofocus = true } = {}) {
     listboxEl = node // AKA container
     isMounted = true
-    // Attach helpers to Menu, which is on menu el as if it's a context, used for programmatic purposes e.g. `Item.svelte` & button handlers, consumer API
-    // These helpers are always available once set, but should only be run if the menu element is on the DOM! (They don't do any checks)
+    // Attach helpers to Listbox, which is on listbox el as if it's a context, used for programmatic purposes e.g. `Item.svelte` & button handlers, consumer API
+    // These helpers are always available once set, but should only be run if the listbox element is on the DOM! (They don't do any checks)
     listboxEl.Listbox = Object.assign(Listbox, { reset, gotoItem, nextItem, prevItem, search })
     // ?TODO sashuiui-listbox-options-id
     // ? labelledby is either by the label, or if doesn't exist, then the button
@@ -150,7 +133,7 @@ export function useListbox(initOpen = false) {
     }
 
     // ==== Helpers attached to the listboxEl
-    /** resets currently selected menuitem, or sets it to the el passed in */
+    /** resets currently selected option, or sets it to the el passed in */
     function reset(curEl = null) {
       selected.set(curEl)
       return (itemsWalker.currentNode = curEl || listboxEl)
