@@ -167,7 +167,7 @@ export function useMenu(initOpen = false) {
 
     let searchQuery = '',
       cancelClearSearch = null
-    const rmEvts = addEvts(menuEl, {
+    const cleanup = addEvts(menuEl, {
       keydown(e) {
         function keyModifier() {
           e.preventDefault()
@@ -231,7 +231,7 @@ export function useMenu(initOpen = false) {
       destroy() {
         isMounted = false
         window.removeEventListener('click', clickOutside)
-        rmEvts()
+        cleanup()
         selectedUnsub()
         buttonIdUnsub()
         menuId.set()
