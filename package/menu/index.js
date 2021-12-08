@@ -1,4 +1,4 @@
-import { onMount, tick } from 'svelte'
+import { tick } from 'svelte'
 import { get, writable } from 'svelte/store'
 import { addEvts } from '../utils/action'
 import { elWalker } from '../utils/elWalker'
@@ -45,7 +45,7 @@ const Menu = useMenu()
 export function useMenu(initOpen = false) {
   var buttonEl,
     menuEl,
-    isListboxMounted = initOpen
+    isMounted = initOpen
   const selected = writable(null),
     menuId = createId(),
     buttonId = createId()
@@ -59,15 +59,15 @@ export function useMenu(initOpen = false) {
     open,
     close,
     /** Button action, expected to be used on a `<button>`-like el. Opens and closes the menu. */
-    button(el) {
-      buttonEl = el
+    button(node) {
+      buttonEl = node
       buttonEl.ariaHasPopup = true
       buttonId.set(buttonEl, 'menubutton')
       const MenuUnsub = Menu.subscribe((isOpen) => (buttonEl.ariaExpanded = isOpen)),
         menuIdUnsub = menuId(buttonEl, 'aria-controls')
       const cleanup = addEvts(buttonEl, {
         click(e) {
-          if (isListboxMounted) close()
+          if (isMounted) close()
           else {
             e.preventDefault()
             e.stopPropagation()
@@ -81,11 +81,11 @@ export function useMenu(initOpen = false) {
             case 'Enter':
             case 'ArrowDown':
               await openTick()
-              Menu?.gotoItem()
+              Menu.gotoItem?.()
               break
             case 'ArrowUp':
               await openTick()
-              Menu?.gotoItem(-1)
+              Menu.gotoItem?.(-1)
               break
           }
           function openTick() {
@@ -142,7 +142,7 @@ export function useMenu(initOpen = false) {
    */
   function Menu(node, { autofocus = true } = {}) {
     menuEl = node
-    isListboxMounted = true
+    isMounted = true
     // Attach helpers to Menu, which is on menu el as if it's a context, used for programmatic purposes e.g. `Item.svelte` & button handlers, consumer API
     // These helpers are always available once set, but should only be run if the menu element is on the DOM! (They don't do any checks)
     menuEl.Menu = Object.assign(Menu, { reset, gotoItem, nextItem, prevItem, search })
@@ -167,7 +167,7 @@ export function useMenu(initOpen = false) {
 
     let searchQuery = '',
       cancelClearSearch = null
-    const rmEvts = addEvts(menuEl, {
+    const cleanup = addEvts(menuEl, {
       keydown(e) {
         function keyModifier() {
           e.preventDefault()
@@ -229,9 +229,9 @@ export function useMenu(initOpen = false) {
     })
     return {
       destroy() {
-        isListboxMounted = false
+        isMounted = false
         window.removeEventListener('click', clickOutside)
-        rmEvts()
+        cleanup()
         selectedUnsub()
         buttonIdUnsub()
         menuId.set()

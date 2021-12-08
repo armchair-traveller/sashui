@@ -42,7 +42,7 @@ export function useMenu(initOpen?: boolean): ((node: any, { autofocus }?: {
     open: () => Promise<void>;
     close: () => Promise<void>;
     /** Button action, expected to be used on a `<button>`-like el. Opens and closes the menu. */
-    button(el: any): {
+    button(node: any): {
         destroy(): void;
     };
     /** A renderless component for a menu item. Generally, it should be wrapped around a button. Exposes an active slot prop for whether the current item is active. */

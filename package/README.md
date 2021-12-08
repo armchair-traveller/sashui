@@ -8,18 +8,20 @@ Short for **S**velte **A**ction **S**tores & **H**eadless **UI**.
 
 **Installation**: simply run `npm i -D sashui`
 
+[Play with the API in an online IDE](https://stackblitz.com/edit/sashui)
+
 ## Status
 
 ✔ Menu  
 ✔ Switch (A toggle isn't a switch! These use checked aria attributes instead of pressed.)  
 ✔ Toggle  
-✔ Dialog (Modal)
+✔ Dialog (Modal)  
+✔ Listbox (Select) - Large similarities to Menu in usage. Docs in JSdoc.
 
-- Listbox (Select) - Working on it right this moment!
+- Popover (seems like a simple `<nav>` link menu?) - Working on it right this moment
 
 ### 🛣 Roadmap
 
-- Popover (seems like a simple `<nav>` link menu?)
 - Radio Group (low priority in favor of `<input type="radio">`s)
 - Disclosure (low priority in favor of `<summary>`)
 - Possibly use inspiration for more components in libs like Radix UI and Chakra UI, just checking behavior & attributes (excluding data prop), ignoring code
@@ -74,6 +76,8 @@ Other general implementation differences:
 
 ### Menu
 
+**Simple Example**
+
 ```svelte
 <script>
 import { useMenu } from 'sashui'
@@ -91,16 +95,22 @@ const Menu = useMenu()
 {/if}
 ```
 
-`$Menu` makes use of Svelte's auto-subscription syntax. Defaults to `false`. You can also use it to open and close the menu programatically (e.g. `$Menu = false`), though closing events are already automatically managed by the menu.
+**API**
+
+`useMenu(initOpen?: Boolean)` initial open state. Default `false`. Returns `Menu` action store.
+
+`use:Menu={{ autofocus?: Boolean }}` autofocus on menu open. Default `true`.
+
+`$Menu` makes use of Svelte's auto-subscription syntax. Default `false`. You can also use it to open and close the menu programatically (e.g. `$Menu = false`), though closing events are already automatically managed by the menu.
 
 Menu also has some programmatic helpers you can invoke (that're used internally):
 
 - `Menu.selected`: A writable store with the current selected menuitem element. You can also set the selected menuitem programatically, which will enable `active` on it, or set it to `null` for no selection. (Note: This doesn't reset the currently selected tree walker, so it's better to use `Menu.reset()` if setting menuitem. This is more for reading current selections and reacting to them via subscription, you can progrogramatically select and `.click()` items.)
-- `Menu.open()`: Opens the menu and focuses it
+- `Menu.open()`: (async) Opens the menu and focuses it
 - While menu is on the DOM (open), you can use these menu helpers (they don't make any checks for open state so you'll have to guard it yourself if needed):
   - `Menu.reset(el?: HTMLElement)` resets the selected el, or if an el is passed in changes currently selected to it.
   - `Menu.gotoItem(idx?: number)` sets current selected item to the item index passed in, accepts negative indexing. By default uses first item. Wraps if null.
-  - `Menu.close()` closes the menu and focuses the menu button afterwards, which is the default behavior of most events causing the menu to close.
+  - `Menu.close()` (async) closes the menu and focuses the menu button afterwards, which is the default behavior of most events causing the menu to close.
   - `Menu.nextItem()` Select next item
   - `Menu.prevItem()` Select previous item
 
@@ -111,9 +121,9 @@ Note: It is possible to expose the search method if there's a use case for it! I
 To keep the modal accessible, the portal is managed for you. This isn't the case for any other Sash components, as creating your own portal utility (should you require it) is easily doable in Svelte.
 Dialog modal state isn't managed for you. `close` events are dispatched on the element with the trigger cause in `event.detail`.
 
-`useDialog(initialOpen?: Boolean)` - returns `dialog` action store.  
-`$dialog` - Boolean representing dialog open state. Default `false`. Set it to open/close the modal.  
-`use:dialog={initialFocus?: HTMLElement}` - if an initial focus is set, must be a valid focusable element within the modal.
+`useDialog(initOpen?: Boolean)` initial open state. Default `false`. Returns `dialog` action store.  
+`$dialog` Boolean representing dialog open state. Default `false`. Set it to open/close the modal.  
+`use:dialog={{ initialFocus?: HTMLElement }}` if an initial focus is set, must be a valid focusable element within the modal.
 
 ```svelte
 <script>

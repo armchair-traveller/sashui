@@ -1,7 +1,7 @@
-/** @typedef {typeof __propDef.props}  ItemProps */
-/** @typedef {typeof __propDef.events}  ItemEvents */
-/** @typedef {typeof __propDef.slots}  ItemSlots */
-export default class Item extends SvelteComponentTyped<{
+/** @typedef {typeof __propDef.props}  OptionProps */
+/** @typedef {typeof __propDef.events}  OptionEvents */
+/** @typedef {typeof __propDef.slots}  OptionSlots */
+export default class Option extends SvelteComponentTyped<{
     Listbox: any;
 }, {
     [evt: string]: CustomEvent<any>;
@@ -11,9 +11,9 @@ export default class Item extends SvelteComponentTyped<{
     };
 }> {
 }
-export type ItemProps = typeof __propDef.props;
-export type ItemEvents = typeof __propDef.events;
-export type ItemSlots = typeof __propDef.slots;
+export type OptionProps = typeof __propDef.props;
+export type OptionEvents = typeof __propDef.events;
+export type OptionSlots = typeof __propDef.slots;
 import { SvelteComponentTyped } from "svelte";
 declare const __propDef: {
     props: {
