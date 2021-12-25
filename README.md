@@ -10,6 +10,8 @@ Short for **S**velte **A**ction **S**tores & **H**eadless **UI**.
 
 [Play with the API in an online IDE](https://stackblitz.com/edit/sashui)
 
+If you're looking a component library closer to headless UI (not action based, a little bit more verbose), see https://github.com/rgossiaux/svelte-headlessui . Any work on sashui is currently done for personal deployments. While it exposes many powerful internal APIs, isn't SSR'd (though it doesn't matter given all accessible interactivity needs JS as they're not using native HTML interactivity). Using actions is a large departure from Headless and therefore uses up more time to decode requirements for components. Expect it to contain few components until adapting components from libraries like Radix. 
+
 ## Status
 
 ✔ Menu  
