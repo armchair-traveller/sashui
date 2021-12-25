@@ -15,16 +15,17 @@ Short for **S**velte **A**ction **S**tores & **H**eadless **UI**.
 ✔ Menu  
 ✔ Switch (A toggle isn't a switch! These use checked aria attributes instead of pressed.)  
 ✔ Toggle  
-✔ Dialog (Modal)
+✔ Dialog (Modal)  
+✔ Listbox (Select) - Large similarities to Menu in usage. Docs in JSdoc.
 
-- Listbox (Select) - Working on it right this moment!
+- Popover (seems like a simple `<nav>` link menu?) - Working on it right this moment
 
 ### 🛣 Roadmap
 
-- Popover (seems like a simple `<nav>` link menu?)
 - Radio Group (low priority in favor of `<input type="radio">`s)
 - Disclosure (low priority in favor of `<summary>`)
 - Possibly use inspiration for more components in libs like Radix UI and Chakra UI, just checking behavior & attributes (excluding data prop), ignoring code
+- Plans to include and expose basic, but robust action utitilies e.g. portals/clickOutside.
 
 ## Why?
 
@@ -115,6 +116,35 @@ Menu also has some programmatic helpers you can invoke (that're used internally)
   - `Menu.prevItem()` Select previous item
 
 Note: It is possible to expose the search method if there's a use case for it! It just involves a little bit of function param/state manipulation because it currently relies on closure scopes. Open a discussion/issue if you have one in mind or have suggestions!
+
+### Listbox
+
+**Simple Example**
+
+```svelte
+<script>
+import { useListbox } from 'sashui'
+const Listbox = useListbox()
+</script>
+
+<button use:Listbox.button>open</button>
+
+{#if $Listbox}
+  <ul use:Listbox aria-orientation="horizontal">
+    <Listbox.Option let:active>
+      <li class="{active ? 'bg-red-400' : ''} text-black">hi</li>
+    </Listbox.Option>
+    <Listbox.Option let:active>
+      <li aria-disabled class="{active ? 'bg-red-400' : ''} text-black">this one's disabled</li>
+    </Listbox.Option>
+  </ul>
+{/if}
+```
+
+The Listbox has a nearly identical API to the Menu, save for:
+
+- an ability to change orientation by adding an `aria-orientation="horizontal"` (vertical can be set too but it's the default anyway so you'd only explicitly do that if setting back to vertical from horizontal).
+- for any option, use `aria-disabled` on the element instead of simply `disabled` as it's possible that a button isn't used. A merged API with Menu is being considered for this specific difference.
 
 ### Dialog (Modal)
 
