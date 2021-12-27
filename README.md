@@ -10,7 +10,10 @@ Short for **S**velte **A**ction **S**tores & **H**eadless **UI**.
 
 [Play with the API in an online IDE](https://stackblitz.com/edit/sashui)
 
-If you're looking a component library closer to headless UI (not action based, a little bit more verbose), see https://github.com/rgossiaux/svelte-headlessui . Any work on sashui is currently done for personal deployments. While it exposes many powerful internal APIs, isn't SSR'd (though it doesn't matter given all accessible interactivity needs JS as they're not using native HTML interactivity). Using actions is a large departure from Headless and therefore uses up more time to decode requirements for components. Expect it to contain few components until adapting components from libraries like Radix. 
+<details>
+<summary><strong>Alternatives</strong></summary>
+If you're looking a component library closer to Headless-UI (something that isn't action based, a little bit more verbose), see https://github.com/rgossiaux/svelte-headlessui . Any work on Sashui is currently done for personal deployments. While it exposes many powerful internal APIs, it should be noted that actions aren't SSR'd (though it doesn't matter given all accessible interactivity needs JS as they're not using native HTML interactivity) and only the native element plus their associated attributes defined by the user will be present through SSR. Additionally, actions are a large departure from Headless-UI and therefore uses up more time to decode requirements for components. Expect Sashui to contain few components until adapting components from libraries like Radix. 
+</details>
 
 ## Status
 
@@ -26,7 +29,7 @@ If you're looking a component library closer to headless UI (not action based, a
 
 - Radio Group (low priority in favor of `<input type="radio">`s)
 - Disclosure (low priority in favor of `<summary>`)
-- Possibly use inspiration for more components in libs like Radix UI and Chakra UI, just checking behavior & attributes (excluding data prop), ignoring code
+- Possibly use inspiration for more components in libs like Radix UI and Chakra UI, just checking behavior & attributes (excluding data prop), ignoring code... a sort of one-stop shop for renderless APIs.
 - Plans to include and expose basic, but robust action utitilies e.g. portals/clickOutside.
 
 ## Why?
