@@ -1,6 +1,6 @@
 {
   "name": "sashui",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Svelte Action Stores & Headless UI.",
   "main": "index.js",
   "license": "MIT",

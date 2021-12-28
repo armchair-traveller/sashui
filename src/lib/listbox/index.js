@@ -1,24 +1,32 @@
-import Option from '$lib/listbox/Option.svelte'
-import { createId } from '$lib/stores/createId'
-import { addEvts } from '$lib/utils/action'
 import { tick } from 'svelte'
-import { writable } from 'svelte/store'
+import { get, writable } from 'svelte/store'
+import { addEvts } from '$lib/utils/action'
+import { elWalker } from '$lib/utils/elWalker'
+import { createId } from '$lib/stores/createId'
+import Option from '$lib/listbox/Option.svelte'
 
+/**
+ * Creates a new listbox instance. Refer to menu API.
+ * Main differences: `aria-orientation` capability and `aria-disabled` instead of `disabled for options.
+ * @returns `Listbox` action store, w/ additional actions, components, and helpers. If not destructured, MUST be capitalized
+ * for Svelte to recognize the component(s) attached to it.
+ */
 export function useListbox(initOpen = false) {
   let isMounted = initOpen,
     buttonEl,
     listboxEl
-  const orientation = writable(),
-    selected = writable(),
+  const selected = writable(),
     buttonId = createId(),
     listboxId = createId()
 
   return Object.assign(Listbox, {
-    ...writable(isMounted),
+    listboxId,
+    /** store for currently selected element */
     selected,
-    /** default tag: `<button>`
-     * other viable tags: input,a
-     */
+    ...writable(initOpen),
+    open,
+    close,
+    /** Button action, expected to be used on a `<button>`-like el. Opens and closes the menu. */
     button(node) {
       buttonEl = node
       buttonEl.ariaHasPopup = true
@@ -73,7 +81,9 @@ export function useListbox(initOpen = false) {
     },
     // ! Seems like label is unnecessary.
     // ?TODO skipping this unless it's needed, remove later if not label(){}
-    /** A renderless component for an option. default child: `<li>`. Exposes an active slot prop for whether the current item is active. */
+    /** A renderless component for an option. default child: `<li>`. Exposes an active slot prop for whether the current item is active.
+     * Set `aria-disabled` attribute to disable an option.
+     */
     Option:
       typeof window == 'undefined'
         ? Option // prevent SSR from tripping
@@ -85,31 +95,123 @@ export function useListbox(initOpen = false) {
             }
           },
   })
-  /** default tag: `<ul>` */
+  // === Main shared functionality
+  async function open() {
+    Listbox.set(true)
+    await tick()
+    listboxEl?.focus({ preventScroll: true })
+  }
+  async function close() {
+    Listbox.set(false)
+    await tick()
+    buttonEl?.focus({ preventScroll: true })
+  }
+
+  /** default tag: `<ul>`.
+   * Similar API to menu. Only additions: `aria-orientation` for potential horizontal listboxes, and `aria-disabled` instead of `disabled` for each individual option.
+   * As for why aria attributes are usable by the consumer, it made more sense as they are valid attributes, and would have been set internally even if they weren't exposed.
+   * aria-orientation can be set by to 'horizontal' by user for left/right keyboard nav. */
   function Listbox(node, { autofocus = true } = {}) {
     listboxEl = node // AKA container
     isMounted = true
     // Attach helpers to Listbox, which is on listbox el as if it's a context, used for programmatic purposes e.g. `Item.svelte` & button handlers, consumer API
     // These helpers are always available once set, but should only be run if the listbox element is on the DOM! (They don't do any checks)
     listboxEl.Listbox = Object.assign(Listbox, { reset, gotoItem, nextItem, prevItem, search })
-    // ?TODO sashuiui-listbox-options-id
-    // ? labelledby is either by the label, or if doesn't exist, then the button
 
-    const itemsWalker = elWalker(listboxEl, (el) => el.getAttribute('role') == 'option' && !el.ariaDisabled)
+    const itemsWalker = elWalker(listboxEl, (el) => el.getAttribute('role') == 'option' && el.ariaDisabled == null)
 
-    // aria-activedescendant = selected.id
-    // aria-orientation =
+    listboxId.set(listboxEl, 'listbox-options')
     listboxEl.setAttribute('role', 'listbox')
     listboxEl.setAttribute('tabindex', 0)
-    autofocus && listboxEl.focus()
-    addEvts({
-      // TODO search, extract from menu and maybe refactor to make reusable
+    // aria-orientation = Default 'vertical', else 'horizontal'. Impact: keyboard up/down to left/right.
+    listboxEl.ariaOrientation ||= 'vertical'
+
+    const selectedUnsub = selected.subscribe((el) =>
+        el?.id
+          ? listboxEl.setAttribute('aria-activedescendant', el.id)
+          : listboxEl.removeAttribute('aria-activedescendant')
+      ),
+      // ? labelledby is either by the label, or if doesn't exist, then the button. Currently it's by the button only.
+      buttonIdUnsub = buttonId(listboxEl, 'aria-labelledby')
+
+    autofocus && listboxEl.focus({ preventScroll: true }) // a little redundant, but just in case consumer sets the listbox state manually
+
+    function clickOutside(e) {
+      if (listboxEl.contains(e.target) || buttonEl?.contains(e.target)) return
+      close()
+    }
+    window.addEventListener('click', clickOutside)
+
+    const cleanup = addEvts(listboxEl, {
       keydown(e) {
-        // escape: if buttonEl available, try to focus after tick w/ preventScroll
+        function keyModifier() {
+          e.preventDefault()
+          e.stopPropagation()
+        }
+        const isVertical = listboxEl.ariaOrientation == 'vertical'
+        switch (e.key) {
+          // Ref: https://www.w3.org/TR/wai-aria-practices-1.2/#keyboard-interaction-12
+
+          case ' ':
+            if (searchQuery != '') {
+              keyModifier()
+              return search(e.key)
+            }
+          // When in type ahead mode, fallthrough
+          case 'Enter':
+            keyModifier()
+            get(selected)?.click()
+            close()
+            break
+
+          case isVertical ? 'ArrowDown' : 'ArrowRight':
+            keyModifier()
+            return nextItem()
+
+          case isVertical ? 'ArrowUp' : 'ArrowLeft':
+            keyModifier()
+            return prevItem()
+
+          case 'Home':
+          case 'PageUp':
+            keyModifier()
+            return gotoItem()
+
+          case 'End':
+          case 'PageDown':
+            keyModifier()
+            return gotoItem(-1)
+
+          case 'Escape':
+            keyModifier()
+            close()
+            break
+
+          // Nullify tab for focus trapping purposes
+          case 'Tab':
+            keyModifier()
+            break
+
+          default:
+            if (e.key.length == 1) search(e.key, 350)
+            break
+        }
+      },
+      keyup(e) {
+        // Required for firefox, event.preventDefault() in handleKeyDown for the Space key doesn't cancel the handleKeyUp,
+        // which in turn triggers a *click*.
+        e.key == ' ' && e.preventDefault()
       },
     })
     return {
-      destroy() {},
+      destroy() {
+        isMounted = false
+        window.removeEventListener('click', clickOutside)
+        cleanup()
+        selectedUnsub()
+        buttonIdUnsub()
+        listboxId.set(null)
+      },
     }
 
     /** Search by str, clears timeout but doesn't set it on invoke.
@@ -156,16 +258,5 @@ export function useListbox(initOpen = false) {
       }
       return reset(itemsWalker.currentNode)
     }
-  }
-  /** helpers */
-  async function open() {
-    Listbox.set(true)
-    await tick()
-    listboxEl?.focus({ preventScroll: true })
-  }
-  async function close() {
-    Listbox.set(false)
-    await tick()
-    buttonEl?.focus({ preventScroll: true })
   }
 }

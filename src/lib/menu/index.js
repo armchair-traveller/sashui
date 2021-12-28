@@ -59,8 +59,8 @@ export function useMenu(initOpen = false) {
     open,
     close,
     /** Button action, expected to be used on a `<button>`-like el. Opens and closes the menu. */
-    button(el) {
-      buttonEl = el
+    button(node) {
+      buttonEl = node
       buttonEl.ariaHasPopup = true
       buttonId.set(buttonEl, 'menubutton')
       const MenuUnsub = Menu.subscribe((isOpen) => (buttonEl.ariaExpanded = isOpen)),
