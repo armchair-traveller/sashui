@@ -19,7 +19,7 @@
     "package": "svelte-kit package"
   },
   "devDependencies": {
-    "@sveltejs/kit": "next",
+    "@sveltejs/kit": "1.0.0-next.220",
     "autoprefixer": "^10.4.2",
     "cssnano": "^5.0.6",
     "postcss": "^8.4.5",
