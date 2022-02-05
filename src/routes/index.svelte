@@ -5,5 +5,6 @@
 
 <ul class="text-blue-800">
   <a href="/menu" sveltekit:prefetch><li>Menu</li></a>
+  <a href="/listbox" sveltekit:prefetch><li>Listbox</li></a>
   <a href="/dialog" sveltekit:prefetch><li>Dialog</li></a>
 </ul>
