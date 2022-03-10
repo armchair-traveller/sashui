@@ -259,7 +259,10 @@ export function useMenu(initOpen = false) {
     }
 
     // ==== Helpers attached to the menuEl
-    /** resets currently selected menuitem, or sets it to the el passed in */
+    /** resets currently selected menuitem, or sets it to the el passed in
+     * @param {HTMLElement} curEl
+     * @returns {HTMLElement}
+     */
     function reset(curEl = null) {
       selected.set(curEl)
       return (itemsWalker.currentNode = curEl || menuEl)
