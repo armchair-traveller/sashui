@@ -42,15 +42,17 @@ Headless UI is a spin on the concept of renderless components and if you're not 
 
 They're used to inject logic into HTML we're used to working with.
 
-Now this sounds familiar to a feature we're used to in Svelte... an action is defined as:
+**But there's a problem with this in Svelte**. You lose access to element directives (e.g. transitions, class) and bindings inherent to those elements. They will have to be redefined in the component API that the maintainer exposes, and that is by no means an easy feat (would also be very bloated unless it is compiled/preprocessed via build config).
+
+**But there's a Svelte feature that lets the consumer enjoy renderless components while giving the ability define their own elements**. Have you cake and eat it, too. An _action_ is defined as:
 
 > A function that is called when an element is created, taking the element and optional parameters as arguments.
 
-And you can do all sorts of things with actions. It's a simple concept that can allow you to do the same thing managing state and behaviors with elements, and in my humble opinion is a better step forward towards the main goals of renderless components. Since it's just a function performed on an element, you can coordinate all sorts of crazy things and create interop with your own state. And speaking of state, we have a simple solution: stores.
+And you can do all sorts of things with actions. It's a simple concept that can allow you to do the same thing managing state and behaviors with elements, and in my humble opinion is a better step forward towards the main goals of renderless components. Since it's just a function performed on an element, you can coordinate all sorts of crazy things and create interop with your own state. And speaking of state, we have a simple solution: stores. **All while having the same access to elements that makes Svelte powerful** (directives, bindings, etc), but without the extra fluff/bloat or suffering from constraints.
 
 So that's what this library is about. A Headless UI port for Svelte, using **actions and stores**. Sometimes it uses components for their slot props, especially when it doesn't make sense to manually manage each piece of state in a list, but most of the time all it is actions and stores (oh and of course a whoooole lotta vanilla JS DOM manipulation).
 
-p.s. While actions are, in my opinion, a better solution for the consumer of the API... people may be wondering if it's even a departure from how Headless UI components work. It's mostly because of the degree of control over the render logic that Headless has in its implementation, which has no easy equivalent in Svelte. With actions and stores, the render logic doesn't really have to be considered as the consumer gets to build with good ol' elements. For the maintainer, it's a lot of verbose vanilla DOM code to write, but hey the consumer gets to keep all the element directives, power, and conveniences Svelte offers.
+p.s. While actions are, in my opinion, a better solution for the consumer of the API... people may be wondering if it's even a departure from how Headless UI components work given how they're 1:1 with their elements (each component is one element). It's mostly because of the degree of control over the render logic that Headless has in its implementation, which has no easy equivalent in Svelte. With actions and stores, the render logic doesn't really have to be considered as the consumer gets to build with good ol' elements. For the maintainer, it's a lot of verbose vanilla DOM code to write, but hey the consumer gets to keep all the element directives, power, and conveniences Svelte offers. A worthy tradeoff that the consumer benefits highly from.
 
 <details> <summary>Notes</summary>
 This is a Svelte project adapting Headless-UI's (React) functionality to Svelte. Its end goal is just to have the functionality and accessibility of Headless-UI as a few components with predefined unstyled elements.
