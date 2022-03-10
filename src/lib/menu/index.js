@@ -39,7 +39,7 @@ const Menu = useMenu()
 * 
 * Note: button/input disabled uses native `disabled` attribute. Please use elements that have valid disabled attributes if you plan to disable them.
 * Otherwise you'll have to set the disabled prop on the el obj itself and add the disabled attribute.
-* @returns `Menu` action store, w/ additional actions, components, and helpers. If not destructured, MUST be capitalized
+* @returns {import('./index').Menu} `Menu` action store, w/ additional actions, components, and helpers. If not destructured, MUST be capitalized
 * for Svelte to recognize the component(s) attached to it.
 */
 export function useMenu(initOpen = false) {
