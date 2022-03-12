@@ -23,7 +23,10 @@ If you're looking a component library closer to Headless-UI (something that isn'
 ✔ Dialog (Modal)  
 ✔ Listbox (Select) - Large similarities to Menu in usage. Docs in JSdoc.
 
-- Popover (seems like a simple `<nav>` link menu?) - Working on it right this moment
+On the chopping block:
+
+- Next version of Svelte will release typed actions through `Action`, which we can make use of.
+- Popover (seems like a simple `<nav>` link menu?)
 
 ### 🛣 Roadmap
 
