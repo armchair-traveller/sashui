@@ -14,34 +14,6 @@ import Item from './Item.svelte'
  * - Significantly less opinionated about where you place your markup, except where required, due to lack of context
  * - Next item after reaching last item loops back to the first item, and vice versa for first item to previous item = last item.
  */
-
-/**
- * Creates a new menu instance.
-Usage:
-```svelte
-<script>
-import { useMenu } from 'sashui'
-const Menu = useMenu()
-</script>
-
-<button use:Menu.button>open</button>
-
-{#if $Menu}
-  <menu use:Menu>
-    <Menu.Item let:active>
-      <button class="{active ? 'bg-red-400' : ''} text-black">hi</button>
-    </Menu.Item>
-  </menu>
-{/if}
-```
-* Uses closures, stores, and elements to handle state. Doesn't use context so theoretically you could use it outside
-* the script tag... but not recommended.
-* 
-* Note: button/input disabled uses native `disabled` attribute. Please use elements that have valid disabled attributes if you plan to disable them.
-* Otherwise you'll have to set the disabled prop on the el obj itself and add the disabled attribute.
-* @returns {import('./index').Menu} `Menu` action store, w/ additional actions, components, and helpers. If not destructured, MUST be capitalized
-* for Svelte to recognize the component(s) attached to it.
-*/
 export function useMenu(initOpen = false) {
   var buttonEl,
     menuEl,
@@ -50,15 +22,14 @@ export function useMenu(initOpen = false) {
     menuId = createId(),
     buttonId = createId()
 
-  // When using Object.assign, TS only infers types at return, not for intermediary code.
+  // When using Object.assign, TS only infers types at return, not for intermediary code. That doesn't mean anything in
+  // this case because we're using a declaration file, but it's still good to know.
   return Object.assign(Menu, {
     menuId,
-    /** store for currently selected element */
     selected,
     ...writable(initOpen),
     open,
     close,
-    /** Button action, expected to be used on a `<button>`-like el. Opens and closes the menu. */
     button(node) {
       buttonEl = node
       buttonEl.ariaHasPopup = true
@@ -110,7 +81,6 @@ export function useMenu(initOpen = false) {
         },
       }
     },
-    /** A renderless component for a menu item. Generally, it should be wrapped around a button. Exposes an active slot prop for whether the current item is active. */
     Item:
       typeof window == 'undefined'
         ? Item // prevent SSR from tripping
@@ -134,18 +104,13 @@ export function useMenu(initOpen = false) {
     buttonEl?.focus({ preventScroll: true })
   }
 
-  /** Menu action store. Ideal tag: `<menu>`
-   *
-   * Menu store gives open state, which can be set to manually manage open/close if desired. It also has many helpers usable both programmatically and internally.
-   *
-   * * Theoretically, actions make it easy to incorporate options via params. No options are obvious at the moment, so none are present. And custom stores/methods can be used to easily manage that, too.
-   */
   function Menu(node, { autofocus = true } = {}) {
     menuEl = node
     isMounted = true
-    // Attach helpers to Menu, which is on menu el as if it's a context, used for programmatic purposes e.g. `Item.svelte` & button handlers, consumer API
-    // These helpers are always available once set, but should only be run if the menu element is on the DOM! (They don't do any checks)
-    menuEl.Menu = Object.assign(Menu, { reset, gotoItem, nextItem, prevItem, search })
+    // Attach helpers to Menu, used for programmatic purposes e.g. passed to `Item.svelte` & button handlers, consumer API
+    // These helpers are always available once set, but should only be run if the menu element is on the DOM!
+    // They don't do any checks, helprs aren't removed on destroy but considered it if it causes problems with the consumer API.
+    Object.assign(Menu, { reset, gotoItem, nextItem, prevItem, search })
 
     const itemsWalker = elWalker(menuEl, (el) => el.getAttribute('role') == 'menuitem' && !el.disabled)
 
@@ -238,9 +203,6 @@ export function useMenu(initOpen = false) {
       },
     }
 
-    /** Search by str, clears timeout but doesn't set it on invoke.
-     * @param {number} timeout - if not set, won't clear timeout. Resets timeout if invoked again before clear
-     */
     function search(char = '', timeout = null) {
       clearTimeout(cancelClearSearch)
       searchQuery += char.toLowerCase()
@@ -259,15 +221,11 @@ export function useMenu(initOpen = false) {
     }
 
     // ==== Helpers attached to the menuEl
-    /** resets currently selected menuitem, or sets it to the el passed in
-     * @param {HTMLElement} curEl
-     * @returns {HTMLElement}
-     */
     function reset(curEl = null) {
       selected.set(curEl)
       return (itemsWalker.currentNode = curEl || menuEl)
     }
-    /** @param idx default first item, accepts negative indexing. */
+
     function gotoItem(idx = 0) {
       if (idx < 0) {
         // negative idx, start from last item

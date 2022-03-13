@@ -10,7 +10,11 @@ import { inertOthers } from './inertOthers'
 
 const focusable =
   'a[href], area[href], input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, [tabindex="0"], [contenteditable], audio[controls], video[controls], summary, [tabindex^="0"], [tabindex^="1"], [tabindex^="2"], [tabindex^="3"], [tabindex^="4"], [tabindex^="5"], [tabindex^="6"], [tabindex^="7"], [tabindex^="8"], [tabindex^="9"]'
-/** `aria-describedby` not implemented. To the consumer it's literally one attribute, and thus' not worth an action for. */
+/** Creates a new dialog instance.
+ * * `aria-describedby` not implemented. To the consumer it's literally one attribute, and thus' not worth an action for.
+ * * DO NOT NEST DIALOGS. Keep only one open at any particular moment. It's an antipattern to have more and this library intentionally doesn't support it.
+ * If you need to display a different dialog either close the current one then open it, or change the contents of the currently opened dialog.
+ * e.g. You can use alternative patterns like tabs. */
 export function useDialog(initOpen = false) {
   let dialogEl,
     titleId = createId()

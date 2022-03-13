@@ -6,8 +6,8 @@ import { createId } from '$lib/stores/createId'
 import Option from '$lib/listbox/Option.svelte'
 
 /**
- * Creates a new listbox instance. Refer to menu API.
- * Main differences: `aria-orientation` capability and `aria-disabled` instead of `disabled for options.
+ * Creates a new listbox instance. Refer to Menu API for usage.
+ * Main differences: `aria-orientation` capability and `aria-disabled` instead of `disabled` for options.
  * @returns `Listbox` action store, w/ additional actions, components, and helpers. If not destructured, MUST be capitalized
  * for Svelte to recognize the component(s) attached to it.
  */
