@@ -25,15 +25,18 @@ If you're looking a component library closer to Headless-UI (something that isn'
 
 On the chopping block:
 
-- Next version of Svelte will release typed actions through `Action`, which we can make use of.
-- Popover (seems like a simple `<nav>` link menu?)
+- Next version of Svelte will release typed actions through `Action` interface/generic, which we will make use of to type our actions.
 
 ### 🛣 Roadmap
 
+- Refactor Listbox code into Menu (they're essentially the same implementations with naming/orientation differences). Possibly extract utils/helpers used in other similar components (e.g. Combobox).
+- Update search logic after above refactor
 - Radio Group (low priority in favor of `<input type="radio">`s)
 - Disclosure (low priority in favor of `<summary>`)
 - Possibly use inspiration for more components in libs like Radix UI and Chakra UI, just checking behavior & attributes (excluding data prop), ignoring code... a sort of one-stop shop for renderless APIs.
 - Plans to include and expose basic, but robust action utitilies e.g. portals/clickOutside.
+
+Components that won't be added to the library (likely because there're [great alternatives](https://mem.ai/p/T3lpS4DgJm4fGLBxnBoj): Popover, tooltip.
 
 ## Why?
 
@@ -47,15 +50,19 @@ They're used to inject logic into HTML we're used to working with.
 
 **But there's a problem with this in Svelte**. You lose access to element directives (e.g. transitions, class) and bindings inherent to those elements. They will have to be redefined in the component API that the maintainer exposes, and that is by no means an easy feat (would also be very bloated unless it is compiled/preprocessed via build config).
 
-**But there's a Svelte feature that lets the consumer enjoy renderless components while giving the ability define their own elements**. Have you cake and eat it, too. An _action_ is defined as:
+**Introducing a Svelte feature that lets the consumer enjoy renderless components while giving the ability to define their own elements**... (Have thy cake and eat it, too!) An _action_ is defined as:
 
 > A function that is called when an element is created, taking the element and optional parameters as arguments.
 
 And you can do all sorts of things with actions. It's a simple concept that can allow you to do the same thing managing state and behaviors with elements, and in my humble opinion is a better step forward towards the main goals of renderless components. Since it's just a function performed on an element, you can coordinate all sorts of crazy things and create interop with your own state. And speaking of state, we have a simple solution: stores. **All while having the same access to elements that makes Svelte powerful** (directives, bindings, etc), but without the extra fluff/bloat or suffering from constraints.
 
-So that's what this library is about. A Headless UI port for Svelte, using **actions and stores**. Sometimes it uses components for their slot props, especially when it doesn't make sense to manually manage each piece of state in a list, but most of the time all it is actions and stores (oh and of course a whoooole lotta vanilla JS DOM manipulation).
+Use what you already know from Svelte and Sashui will be your friend — there's no unexpected new component API to learn, most of which is a thinly veiled attempt to replicate the Svelte conveniences all over again, but with slight differences just to get it working for components.
 
-p.s. While actions are, in my opinion, a better solution for the consumer of the API... people may be wondering if it's even a departure from how Headless UI components work given how they're 1:1 with their elements (each component is one element). It's mostly because of the degree of control over the render logic that Headless has in its implementation, which has no easy equivalent in Svelte. With actions and stores, the render logic doesn't really have to be considered as the consumer gets to build with good ol' elements. For the maintainer, it's a lot of verbose vanilla DOM code to write, but hey the consumer gets to keep all the element directives, power, and conveniences Svelte offers. A worthy tradeoff that the consumer benefits highly from.
+So that's what this library is about. A Headless UI port for Svelte, using **actions and stores**. Sometimes it uses components for their slot props, especially when it doesn't make sense to manually manage each piece of state in a list, but most of the time all it is actions and stores.
+
+## Where's the Trade-Off?
+
+While actions are, in my opinion, a better solution for the consumer of the API... people may be wondering if it's even a departure from how Headless UI components work given how they're 1:1 with their elements (each component is one element). It's mostly because of the degree of control over the render logic that Headless has in its implementation, which has no easy equivalent in Svelte. With actions and stores, the render logic doesn't really have to be considered as the consumer gets to build with good ol' elements. For the maintainer, it's a lot of verbose vanilla DOM code to write, but hey the consumer gets to keep all the element directives, power, and conveniences Svelte offers. **This is the tradeoff**: An API the consumer can appreciate, for the cost of the maintainer needing to write DOM manipulation code.
 
 <details> <summary>Notes</summary>
 This is a Svelte project adapting Headless-UI's (React) functionality to Svelte. Its end goal is just to have the functionality and accessibility of Headless-UI as a few components with predefined unstyled elements.
@@ -78,7 +85,7 @@ Transition implementation is skipped in favor of Svelte's native transitions / a
 
 It's important to understand that the library's implementation is using actions to enhance the raw elements the consumer provides. It utilizes the native interaction benefits of HTML when possible, instead of masquerading or overriding them. This means **less package size and better performance**, and well... elements are the most battle tested and stable APIs a web developer can have when it comes to components. Many elements have their own specific interactions and semantic HTML purposes. This means that you should use the correct markup, usually provided in examples/docs. This is inline with how Svelte elements work -- for example you can only bind to valid attributes on any particular HTML element, and they offer different conveniences depending on the element. This library isn't an excuse to abuse and throw a bunch of divs on your page or disregard any semblance of semantic HTML, merely to provide an easy, quick entrypoint without overloading your brain with the component's implementation details. A simple docs minimal markup copy+paste is the only required work that has to be done. It's like working with normal semantic HTML, so if you're already familiar with that then you will feel at home, perhaps with little use for the docs very quickly.
 
-That said, this library attempts to be flexible where it makes sense, and provide conveniences where/when it is possible. You aren't strictly bound to a certain element for everything, e.g. `<button>`, `<input type="submit">`, `<input type="button">` will often be sufficiently interchangeable depending on context, and sometimes custom events are dispatched on elements for consistency. (Keep in mind that it's certainly easy to JSDoc valid elements for each action/component later on which would be very convenient, if time allows work to be done on that...)
+That said, this library attempts to be flexible where it makes sense, and provide conveniences where/when it is possible. You aren't strictly bound to a certain element for everything, e.g. `<button>`, `<input type="submit">`, `<input type="button">` will often be sufficiently interchangeable depending on context, and sometimes custom events are dispatched on elements for consistency. (Keep in mind that it's certainly easy to JSDoc/TS valid elements for each action/component later on which would be very convenient, if time allows work to be done on that...)
 
 Other general implementation differences:
 
