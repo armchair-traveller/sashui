@@ -1,6 +1,6 @@
 {
   "name": "sashui",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Svelte Action Stores & Headless UI.",
   "main": "index.js",
   "license": "MIT",
@@ -17,10 +17,10 @@
     "build": "svelte-kit build",
     "preview": "svelte-kit preview",
     "package": "svelte-kit package",
-    "clean": "node ./scripts/cleanPkg.js",
+    "clean": "node --experimental-json-modules ./scripts/cleanPkg.js",
     "bump": "npm version patch --force",
     "bump:minor": "npm version minor --force",
-    "publish": "npm run bump && npm run package && npm run clean && npm publish ./package --no-git-checks"
+    "publish": "npm run bump && npm run package && npm run clean && npm publish ./package --no-git-checks && rm -rf ./package"
   },
   "devDependencies": {
     "@sveltejs/kit": "1.0.0-next.220",
