@@ -4,31 +4,32 @@ import { onDestroy } from 'svelte'
 import SlotEl from '../SlotEl.svelte'
 import { addEvts } from '../utils/action'
 import { generateId } from '../stores/createId'
-export let Menu
+/** INTERNAL: DO NOT USE. Not intended for consumer. */
+export let _Menu = undefined
 let el,
   active = false,
   cleanup = null
 $: if (el) setup()
 function setup() {
   cleanup?.()
-  const unsub = Menu.selected.subscribe((selectedEl) => (active = selectedEl == el))
+  const unsub = _Menu.selected.subscribe((selectedEl) => (active = selectedEl == el))
 
   el.setAttribute('role', 'menuitem')
   el.setAttribute('tabindex', -1)
   el.id = generateId('menuitem')
 
   function handleMove() {
-    if (!active) Menu.reset(el)
+    if (!active) _Menu.reset(el)
   }
   function handleLeave() {
-    if (active) Menu.reset()
+    if (active) _Menu.reset()
   }
   const rmvEvts = addEvts(el, {
     focus() {
-      Menu.reset(el)
+      _Menu.reset(el)
     },
     click() {
-      Menu.close()
+      _Menu.close()
     },
     pointermove: handleMove,
     mousemove: handleMove,

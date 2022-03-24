@@ -1,5 +1,5 @@
 import type { Writable } from 'svelte/types/runtime/store'
-import type Item from './Item.svelte'
+import Item from './Item.svelte'
 
 /** Menu action store to create a dropdown menu. Ideal tag: `<menu>`
  *
@@ -17,7 +17,7 @@ interface Menu extends Writable<?boolean> {
   /** Button action, expected to be used on a `<button>`-like element. Opens and closes the menu. */
   button(node: HTMLButtonElement | HTMLInputElement): { destroy(): void }
   /** A renderless component for a menu item. Generally, it should be wrapped around a button. Exposes an active slot prop for whether the current item is active. */
-  Item: Item
+  Item: typeof Item
   /** Store for currently selected element */
   selected: Writable<?HTMLElement>
   menuId: Writable<?string>
