@@ -36,7 +36,7 @@ On the chopping block:
 - Possibly use inspiration for more components in libs like Radix UI and Chakra UI, just checking behavior & attributes (excluding data prop), ignoring code... a sort of one-stop shop for renderless APIs.
 - Plans to include and expose basic, but robust action utitilies e.g. portals/clickOutside.
 
-Components that won't be added to the library (likely because there're [great alternatives](https://mem.ai/p/T3lpS4DgJm4fGLBxnBoj): Popover, tooltip.
+Components that won't be added to the library (likely because there're [great alternatives](https://mem.ai/p/T3lpS4DgJm4fGLBxnBoj)): Popover, tooltip.
 
 ## Why?
 
