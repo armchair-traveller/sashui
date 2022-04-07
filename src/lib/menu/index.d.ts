@@ -7,7 +7,7 @@ import Item from './Item.svelte'
  *
  * * Theoretically, actions make it easy to incorporate options via params. No options are obvious at the moment, so none are present. And custom stores/methods can be used to easily manage that, too.
  */
-interface Menu extends Writable<?boolean> {
+interface Menu extends Writable<boolean> {
   (
     node: HTMLMenuElement | HTMLElement,
     params: {
@@ -19,8 +19,8 @@ interface Menu extends Writable<?boolean> {
   /** A renderless component for a menu item. Generally, it should be wrapped around a button. Exposes an active slot prop for whether the current item is active. */
   Item: typeof Item
   /** Store for currently selected element */
-  selected: Writable<?HTMLElement>
-  menuId: Writable<?string>
+  selected: Writable<HTMLElement | null>
+  menuId: Writable<string | undefined>
   open(): Promise<void>
   close(): Promise<void>
   /** Resets currently selected menuitem, or sets it to the el passed in */
