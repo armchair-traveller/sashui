@@ -24,16 +24,16 @@
   },
   "devDependencies": {
     "@sveltejs/kit": "1.0.0-next.220",
-    "postcss": "^8.4.5",
-    "postcss-load-config": "^3.1.1",
-    "svelte": "^3.44.0",
-    "svelte-preprocess": "^4.10.1",
-    "svelte2tsx": "^0.4.7",
-    "tailwindcss": "^3.0.12",
-    "typescript": "^4.4.3"
+    "postcss": "^8.4.12",
+    "postcss-load-config": "^3.1.4",
+    "svelte": "^3.47.0",
+    "svelte-preprocess": "^4.10.6",
+    "svelte2tsx": "^0.5.9",
+    "tailwindcss": "^3.0.24",
+    "typescript": "^4.6.3"
   },
   "peerDependencies": {
-    "svelte": "^3.44.0"
+    "svelte": "^3.47.0"
   },
   "type": "module"
 }
