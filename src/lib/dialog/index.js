@@ -14,7 +14,9 @@ const focusable =
  * * `aria-describedby` not implemented. To the consumer it's literally one attribute, and thus' not worth an action for.
  * * DO NOT NEST DIALOGS. Keep only one open at any particular moment. It's an antipattern to have more and this library intentionally doesn't support it.
  * If you need to display a different dialog either close the current one then open it, or change the contents of the currently opened dialog.
- * e.g. You can use alternative patterns like tabs. */
+ * e.g. You should use alternative patterns like breadcrumbs for tracking progression or tabs to have different views.
+ *
+ * You should have at least one focusable element present in any dialogs you use for accessibility purposes. */
 export function useDialog(initOpen = false) {
   let dialogEl,
     titleId = createId()
@@ -45,7 +47,8 @@ export function useDialog(initOpen = false) {
     },
   })
 
-  function dialog(el, /** @type {?HTMLElement} */ initialFocus) {
+  /** @type {import('svelte/action').Action<HTMLElement, HTMLElement | null>} */
+  function dialog(el, initialFocus = null) {
     dialogEl = el
     // move the dialog to the body via a portal
     document.body.append(dialogEl)
@@ -58,7 +61,17 @@ export function useDialog(initOpen = false) {
     // focusWalker walks through focusables in the dialog
     const focusWalker = elWalker(dialogEl, (el) => el.matches(focusable))
 
-    const focusNext = () => focusWalker.next()?.focus({ preventScroll: true })
+    /** keeps focus order in sync e.g. user clicks a random focusable then uses keyboard navigation */
+    function setCurrent() {
+      const focused = document.activeElement
+      if (focused != focusWalker.currentNode)
+        focusWalker.currentNode = dialogEl.contains(focused) && focused.matches(focusable) ? focused : dialogEl // edge case: resetting when focus is somehow outside the dialog. initialFocus isn't a valid reset node and is less reliable, too.
+    }
+
+    function focusNext() {
+      setCurrent()
+      focusWalker.next()?.focus({ preventScroll: true })
+    }
 
     if (initialFocus) (focusWalker.currentNode = initialFocus).focus({ preventScroll: true })
     else focusNext()
@@ -79,8 +92,10 @@ export function useDialog(initOpen = false) {
             // Handle `Tab` & `Shift+Tab` keyboard events
             case 'Tab':
               e.preventDefault()
-              if (e.shiftKey) focusWalker.prev()?.focus({ preventScroll: true })
-              else focusNext()
+              if (e.shiftKey) {
+                setCurrent()
+                focusWalker.prev()?.focus({ preventScroll: true })
+              } else focusNext()
               break
           }
         },
