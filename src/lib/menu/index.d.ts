@@ -1,21 +1,15 @@
 import type { Writable } from 'svelte/types/runtime/store'
 import Item from './Item.svelte'
+import type { Action } from 'svelte/action'
 
 /** Menu action store to create a dropdown menu. Ideal tag: `<menu>`
  *
- * Menu store gives open state, which can be set to manually manage open/close if desired. It also has many helpers usable both programmatically and internally.
+ * $Menu store gives open state when subscribed, which can be set to manually manage open/close if desired.
  *
- * * Theoretically, actions make it easy to incorporate options via params. No options are obvious at the moment, so none are present. And custom stores/methods can be used to easily manage that, too.
- */
-interface Menu extends Writable<boolean> {
-  (
-    node: HTMLMenuElement | HTMLElement,
-    params: {
-      autofocus?: boolean
-    }
-  ): { destroy(): void }
+ * Menu, when not subscribed also has many helpers usable both programmatically and internally. */
+interface Menu extends Writable<boolean>, Action<HTMLMenuElement | HTMLElement, { autofocus?: boolean }> {
   /** Button action, expected to be used on a `<button>`-like element. Opens and closes the menu. */
-  button(node: HTMLButtonElement | HTMLInputElement): { destroy(): void }
+  button: Action<HTMLButtonElement | HTMLInputElement | HTMLAnchorElement>
   /** A renderless component for a menu item. Generally, it should be wrapped around a button. Exposes an active slot prop for whether the current item is active. */
   Item: typeof Item
   /** Store for currently selected element */
