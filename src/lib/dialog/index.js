@@ -123,6 +123,9 @@ export function useDialog(initOpen = false) {
         document.documentElement.style.paddingRight = paddingRight
         rmvEvts()
         rmvWinEvts()
+        // Svelte component doesn't consistently auto-`.removeChild` on all browsers
+        // tell its parent to remove it (if it has a parent, means it is still on DOM)
+        dialogEl.parentNode?.removeChild(dialogEl)
       },
     }
   }
