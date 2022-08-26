@@ -21,6 +21,7 @@ export function useMenu(initOpen = false) {
   const selected = writable(null),
     menuId = createId(),
     buttonId = createId()
+  // TODO initial state for item commands should be initialized here, important for refactor with no need for TS declaration file because all functions are available
 
   // When using Object.assign, TS only infers types at return, not for intermediary code. That doesn't mean anything in
   // this case because we're using a declaration file, but it's still good to know.
@@ -87,7 +88,7 @@ export function useMenu(initOpen = false) {
         : class MenuItem extends Item {
             constructor(options) {
               options.props = options.props || {}
-              options.props.Menu = Menu // pass in Menu action store to component
+              options.props._Menu = Menu // pass in Menu action store to component, _Menu means internal use only
               super(options)
             }
           },
@@ -104,6 +105,7 @@ export function useMenu(initOpen = false) {
     buttonEl?.focus({ preventScroll: true })
   }
 
+  /** @type {import('svelte/action').Action<HTMLMenuElement | HTMLElement, { autofocus?: boolean }>} */
   function Menu(node, { autofocus = true } = {}) {
     menuEl = node
     isMounted = true
@@ -203,14 +205,14 @@ export function useMenu(initOpen = false) {
       },
     }
 
-    function search(char = '', timeout = null) {
+    function search(char = '', timeout = 0) {
       clearTimeout(cancelClearSearch)
       searchQuery += char.toLowerCase()
       const matchedEl = Array.prototype.find.call(menuEl.querySelectorAll('[role=menuitem]:not([disabled])'), (el) =>
         el.textContent.trim().toLowerCase().startsWith(searchQuery)
       )
       if (matchedEl) reset(matchedEl)
-      if (typeof timeout == 'number') cancelClearSearch = setTimeout(() => (searchQuery = ''), timeout)
+      if (timeout) cancelClearSearch = setTimeout(() => (searchQuery = ''), timeout)
     }
 
     function nextItem() {
