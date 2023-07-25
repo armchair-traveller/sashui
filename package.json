@@ -1,6 +1,6 @@
 {
   "name": "sashui",
-  "version": "0.2.5",
+  "version": "0.3.0",
   "description": "Svelte Action Stores & Headless UI.",
   "main": "index.js",
   "license": "MIT",
@@ -33,7 +33,7 @@
     "typescript": "^4.6.3"
   },
   "peerDependencies": {
-    "svelte": "^3.47.0"
+    "svelte": "^3.47.0 - 4"
   },
   "type": "module"
 }
