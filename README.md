@@ -12,7 +12,7 @@ Short for **S**velte **A**ction **S**tores & **H**eadless **UI**.
 
 <details>
 <summary><strong>Alternatives</strong></summary>
-If you're looking a component library closer to Headless-UI (something that isn't action based, a little bit more verbose), see https://github.com/rgossiaux/svelte-headlessui . Any work on Sashui is currently done for personal deployments. While it exposes many powerful internal APIs, it should be noted that actions aren't SSR'd (though it doesn't matter given all accessible interactivity needs JS as they're not using native HTML interactivity) and only the native element plus their associated attributes defined by the user will be present through SSR. Additionally, actions are a large departure from Headless-UI and therefore uses up more time to decode requirements for components. Expect Sashui to contain few components until adapting components from libraries like Radix. 
+If you're looking a component library closer to Headless-UI (something that isn't action based, a little bit more verbose), see https://github.com/rgossiaux/svelte-headlessui . If you're not specifically looking for an API for Tailwind UI integration, [shadcn-svelte](https://github.com/huntabyte/shadcn-svelte) and [melt-ui](https://github.com/melt-ui/melt-ui) are great choices. Any work on Sashui is currently done for personal deployments. While it exposes many powerful internal APIs, it should be noted that actions aren't SSR'd (though it doesn't matter given all accessible interactivity needs JS as they're not using native HTML interactivity) and only the native element plus their associated attributes defined by the user will be present through SSR. Additionally, actions are a large departure from Headless-UI and therefore uses up more time to decode requirements for components. Expect Sashui to contain few components until adapting components from libraries like Radix. 
 </details>
 
 ## Status
@@ -25,7 +25,7 @@ If you're looking a component library closer to Headless-UI (something that isn'
 
 On the chopping block:
 
-- Next version of Svelte will release typed actions through `Action` interface/generic, which we will make use of to type our actions.
+- Development is on hold while I'm paying close attention to shadcn and potential integration with Tailwind UI, which have conflicting implementations but aren't completely unrelated in their goals. melt-ui & shadcn (unofficial) are present in Svelte. Also looking forward to AI usage e.g. v0.dev
 
 ### 🛣 Roadmap
 
@@ -33,7 +33,7 @@ On the chopping block:
 - Update search logic after above refactor
 - Radio Group (low priority in favor of `<input type="radio">`s)
 - Disclosure (low priority in favor of `<summary>`)
-- Possibly use inspiration for more components in libs like Radix UI and Chakra UI, just checking behavior & attributes (excluding data prop), ignoring code... a sort of one-stop shop for renderless APIs.
+- Possibly use inspiration for more components in libs like Radix/Chakra/Shadcn, just checking behavior & attributes (excluding data prop), ignoring code... a sort of one-stop shop for renderless APIs.
 - Plans to include and expose basic, but robust action utitilies e.g. portals/clickOutside.
 
 Components that won't be added to the library (likely because there're [great alternatives](https://mem.ai/p/T3lpS4DgJm4fGLBxnBoj)): Popover, tooltip.
